@@ -40,5 +40,9 @@ namespace LiveTubeReport
 			logger.Debug("LiveNextRequestTime	: " + this.Live.NextRequestTime);
 			logger.Debug("LiveLastRequestTime	: " + this.Live.LastRequestTime);
 		}
+
+		public override String ToString() {
+			return Utils.Serialize(this);
+		}
 	}
 }

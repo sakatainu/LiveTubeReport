@@ -16,15 +16,19 @@ using System.Threading.Tasks;
  */
 
 namespace LiveTubeReport {
-	public partial class Form1 : Form {
+	public partial class MainForm : Form {
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
 		private ChannelManager _ChannelManager;
 		private System.Timers.Timer _Timer;
 		private Config conf;
 
-		public Form1() {
+		public MainForm() {
 			InitializeComponent();
+
+			ToolStripProfessionalRenderer renderer = new ToolStripProfessionalRenderer();
+			renderer.RoundedEdges = false;
+			toolStrip.Renderer = renderer;
 		}
 
 		/******************             ここから下はイベントハンドラ              *******************************/
@@ -96,7 +100,7 @@ namespace LiveTubeReport {
 				return;
 			}
 			
-			string channelID = this.getChannelIDByUrl(textBoxChannelID.Text);
+			string channelID = this.GetChannelIDByUrl(textBoxChannelID.Text);
 			if ("".Equals(channelID) || this.hasChannelID(channelID)) {
 				logger.Error("入力したURLが正しくないか、一覧に存在しているため追加できません。");
 				textBoxChannelID.Text = "";
@@ -209,7 +213,7 @@ namespace LiveTubeReport {
 		}
 
 		//URLからチェンネルIDを取得 取得できなければ空文字を返す
-		private string getChannelIDByUrl(string inputURL) {
+		private string GetChannelIDByUrl(string inputURL) {
 			logger.Debug("Start");
 
 			string expression = "(?<type>channel)/(?<id>.*?)(&|$|/)";
@@ -281,6 +285,11 @@ namespace LiveTubeReport {
 				logger.Debug("Name          : " + row["channelName"].ToString());
 				logger.Debug("LiveStatus    : " + row["liveStatus"].ToString());
 			}
+		}
+
+		private void オプションToolStripMenuItem_Click(object sender, EventArgs e) {
+			OptionForm option = new OptionForm();
+			option.ShowDialog();
 		}
 	}
 }

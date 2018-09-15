@@ -30,7 +30,7 @@ namespace LiveTubeReport
 		///チャンネルから生放送の情報を取得します
 		///keylist liveID, liveTitle, liveUrl
 		/// </summary>
-		public Dictionary<string, object> RequestLiveData(string channelID)
+		public Dictionary<string, object> GetLiveInfoData(string channelID)
 		{
 			//検索条件の設定
 			var searchListRequest = _youtubeService.Search.List("id,snippet");
@@ -60,7 +60,7 @@ namespace LiveTubeReport
 
 		//チャンネルIDからチャンネルの情報を取得します
 		//keylist channelName, thumbnail
-		public Dictionary<string, object> RequestChannelData(string channelID)
+		public Dictionary<string, object> GetChannelData(string channelID)
 		{
 			//検索条件の設定
 			var searchListRequest = _youtubeService.Search.List("snippet");
