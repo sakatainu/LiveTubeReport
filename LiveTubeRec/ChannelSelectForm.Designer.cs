@@ -87,7 +87,7 @@
 			this.dataGridView.Name = "dataGridView";
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowTemplate.Height = 21;
-			this.dataGridView.Size = new System.Drawing.Size(776, 150);
+			this.dataGridView.Size = new System.Drawing.Size(776, 341);
 			this.dataGridView.TabIndex = 0;
 			// 
 			// channelIDDataGridViewTextBoxColumn
