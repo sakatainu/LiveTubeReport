@@ -96,7 +96,7 @@ namespace LiveTubeReport {
 			logger.Trace("");
 
 			Dictionary<string, object> dic;
-			dic = this._youTubeDataProvider.RequestChannelData(channelID);
+			dic = this._youTubeDataProvider.GetChannelData(channelID);
 
 			DataRow row = table.NewRow();
 
@@ -130,7 +130,7 @@ namespace LiveTubeReport {
 		public void SetLiveStatus(DataRow row) {
 			logger.Debug("チャンネル " + row["channelName"].ToString() + " の記録を開始します。");
 
-			Dictionary<string, object> dic = _youTubeDataProvider.RequestLiveData(row["channelID"].ToString());
+			Dictionary<string, object> dic = _youTubeDataProvider.GetLiveInfoData(row["channelID"].ToString());
 
 			DateTime dt = DateTime.Now;
 			row["liveStatus"] = dic["liveStatus"];

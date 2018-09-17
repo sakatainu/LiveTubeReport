@@ -1,6 +1,6 @@
 ﻿namespace LiveTubeReport
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -30,6 +30,7 @@
         {
 			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -64,6 +65,10 @@
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
+			this.toolStrip = new System.Windows.Forms.ToolStrip();
+			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.オプションToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dgvThumbnail = new System.Windows.Forms.DataGridViewImageColumn();
 			this.dgvChannelID = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvChannelName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -82,6 +87,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.channelTable)).BeginInit();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
+			this.toolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// textBox_Log
@@ -104,7 +110,7 @@
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.textBox_Log);
-			this.groupBox1.Location = new System.Drawing.Point(0, 344);
+			this.groupBox1.Location = new System.Drawing.Point(0, 361);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(917, 133);
 			this.groupBox1.TabIndex = 3;
@@ -140,13 +146,13 @@
 			this.dataGridView.ContextMenuStrip = this.contextMenuStrip;
 			this.dataGridView.DataMember = "ChannelTable";
 			this.dataGridView.DataSource = this.liveTubeDataSet;
-			this.dataGridView.Location = new System.Drawing.Point(12, 66);
+			this.dataGridView.Location = new System.Drawing.Point(12, 92);
 			this.dataGridView.Name = "dataGridView";
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowHeadersVisible = false;
 			this.dataGridView.RowTemplate.Height = 21;
 			this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView.Size = new System.Drawing.Size(893, 272);
+			this.dataGridView.Size = new System.Drawing.Size(893, 263);
 			this.dataGridView.TabIndex = 2;
 			this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
 			this.dataGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_CellMouseDown);
@@ -280,7 +286,7 @@
 			// 
 			this.groupBox2.Controls.Add(this.textBoxChannelID);
 			this.groupBox2.Controls.Add(this.buttonInsert);
-			this.groupBox2.Location = new System.Drawing.Point(12, 12);
+			this.groupBox2.Location = new System.Drawing.Point(12, 32);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(742, 48);
 			this.groupBox2.TabIndex = 0;
@@ -292,7 +298,7 @@
 			this.groupBox3.Controls.Add(this.button3);
 			this.groupBox3.Controls.Add(this.button1);
 			this.groupBox3.Controls.Add(this.button2);
-			this.groupBox3.Location = new System.Drawing.Point(760, 12);
+			this.groupBox3.Location = new System.Drawing.Point(760, 32);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(145, 48);
 			this.groupBox3.TabIndex = 1;
@@ -333,11 +339,56 @@
 			// 
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(811, 483);
+			this.label1.Location = new System.Drawing.Point(811, 500);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(43, 12);
 			this.label1.TabIndex = 4;
 			this.label1.Text = "[ 状態：";
+			// 
+			// toolStrip
+			// 
+			this.toolStrip.BackColor = System.Drawing.SystemColors.Window;
+			this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1,
+            this.toolStripDropDownButton2});
+			this.toolStrip.Location = new System.Drawing.Point(0, 0);
+			this.toolStrip.Name = "toolStrip";
+			this.toolStrip.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
+			this.toolStrip.Size = new System.Drawing.Size(917, 25);
+			this.toolStrip.TabIndex = 5;
+			this.toolStrip.Text = "toolStrip1";
+			// 
+			// toolStripDropDownButton1
+			// 
+			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+			this.toolStripDropDownButton1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+			this.toolStripDropDownButton1.ShowDropDownArrow = false;
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(55, 22);
+			this.toolStripDropDownButton1.Text = "ファイル";
+			// 
+			// toolStripDropDownButton2
+			// 
+			this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.オプションToolStripMenuItem});
+			this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
+			this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+			this.toolStripDropDownButton2.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+			this.toolStripDropDownButton2.ShowDropDownArrow = false;
+			this.toolStripDropDownButton2.Size = new System.Drawing.Size(48, 22);
+			this.toolStripDropDownButton2.Text = "ツール";
+			// 
+			// オプションToolStripMenuItem
+			// 
+			this.オプションToolStripMenuItem.Name = "オプションToolStripMenuItem";
+			this.オプションToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+			this.オプションToolStripMenuItem.Text = "オプション";
+			this.オプションToolStripMenuItem.Click += new System.EventHandler(this.オプションToolStripMenuItem_Click);
 			// 
 			// dgvThumbnail
 			// 
@@ -439,18 +490,19 @@
 			this.dgvAddDate.ReadOnly = true;
 			this.dgvAddDate.Width = 110;
 			// 
-			// Form1
+			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
-			this.ClientSize = new System.Drawing.Size(917, 501);
+			this.ClientSize = new System.Drawing.Size(917, 518);
+			this.Controls.Add(this.toolStrip);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.dataGridView);
-			this.Name = "Form1";
+			this.Name = "MainForm";
 			this.Text = "LiveTubeReport";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.Load += new System.EventHandler(this.Form1_Load);
@@ -463,6 +515,8 @@
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
+			this.toolStrip.ResumeLayout(false);
+			this.toolStrip.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -499,6 +553,10 @@
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ToolStrip toolStrip;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
+		private System.Windows.Forms.ToolStripMenuItem オプションToolStripMenuItem;
 		private System.Windows.Forms.DataGridViewImageColumn dgvThumbnail;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvChannelID;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvChannelName;

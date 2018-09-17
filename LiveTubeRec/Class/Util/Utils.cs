@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,17 @@ namespace LiveTubeReport
 			}
 
 			return new Bitmap(imgStream);
+		}
+
+		/// <summary>
+		/// 任意のオブジェクトを JSON メッセージへシリアライズします。
+		/// </summary>
+		public static string Serialize(object graph) {
+			using (var stream = new MemoryStream()) {
+				var serializer = new DataContractJsonSerializer(graph.GetType());
+				serializer.WriteObject(stream, graph);
+				return Encoding.UTF8.GetString(stream.ToArray());
+			}
 		}
 
 		// ログをコンソールに出力します
