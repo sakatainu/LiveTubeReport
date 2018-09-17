@@ -113,6 +113,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChannelSelectForm.Designer.cs">
+      <DependentUpon>ChannelSelectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="class\const\Consts.cs" />
     <Compile Include="class\util\DirectoryUtils.cs" />
     <Compile Include="class\youtubedata\ChannelManager.cs" />
     <Compile Include="class\entity\Live.cs" />
@@ -139,6 +146,9 @@
     <Compile Include="class\util\Utils.cs" />
     <Compile Include="class\entity\Channel.cs" />
     <Compile Include="class\api\YouTubeDataProvider.cs" />
+    <EmbeddedResource Include="ChannelSelectForm.resx">
+      <DependentUpon>ChannelSelectForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,8 +170,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="client_secrets.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="client_secrets.json.bk" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

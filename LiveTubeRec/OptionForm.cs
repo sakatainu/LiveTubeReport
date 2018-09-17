@@ -1,26 +1,19 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
+using Google.Apis.YouTube.v3;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
-using Google.Apis.Util.Store;
 using System.Threading;
+using System.Windows.Documents;
+using System.Windows.Forms;
 
 namespace LiveTubeReport {
 	public partial class OptionForm : Form {
-
-		private const string CLIENT_ID = "680837152266-n7hrac1ukr4hl3ro7qpoq34tkiiesp19.apps.googleusercontent.com";
-		private const string CLIENT_SECRET = "vCe5_eXu2ZS5QMQyTSt159ow";
-		private const string API_KEY = "";
-		private const string PROFILE_ID = "";
+		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
 		public OptionForm() {
 			InitializeComponent();
@@ -29,17 +22,23 @@ namespace LiveTubeReport {
 		private void button1_Click(object sender, EventArgs e) {
 			try {
 				using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read)) {
-					var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, new[] { YouTubeService.Scope.Youtube }
-				   , "user"
-				   , CancellationToken.None
-				   , new FileDataStore("LiveTubeReport")
-			   ).Result;
+					var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, new[] { YouTubeService.Scope.YoutubeReadonly }
+						, "user"
+						, CancellationToken.None
+						, new FileDataStore("LiveTubeReport")
+					).Result;
+
+					YouTubeDataProvider youTubeDataProvider = new YouTubeDataProvider(credential);
+					List<Dictionary<string, object>> list = youTubeDataProvider.GetSubscriptionsList();
+
+					ChannelSelectForm selectForm = new ChannelSelectForm();
+					selectForm.argument = list;
+					selectForm.ShowDialog();
 				}
 			}
-			catch (AggregateException) {
-				// donothing
+			catch (Exception ex) {
+				logger.Debug(ex.ToString());
 			}
-
 		}
 	}
 }
