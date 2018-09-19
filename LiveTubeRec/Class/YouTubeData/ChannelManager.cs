@@ -92,7 +92,7 @@ namespace LiveTubeReport {
 			}
 		}
 
-		public DataRow GetPreparedDataRow(string channelID, DataTable table) {
+		public DataRow GetChannelDataRow(string channelID, DataTable table) {
 			logger.Trace("");
 
 			Dictionary<string, object> dic;
@@ -100,7 +100,7 @@ namespace LiveTubeReport {
 
 			DataRow row = table.NewRow();
 
-			row["channelID"] = channelID;
+			row[""] = channelID;
 			row["channelName"] = dic["channelName"];
 			row["addDate"] = DateTime.Now;
 

@@ -120,6 +120,7 @@
       <DependentUpon>ChannelSelectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="class\const\Consts.cs" />
+    <Compile Include="class\Monitor.cs" />
     <Compile Include="class\util\DirectoryUtils.cs" />
     <Compile Include="class\youtubedata\ChannelManager.cs" />
     <Compile Include="class\entity\Live.cs" />
@@ -177,6 +178,26 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Channel.datasource" />
+    <None Include="Properties\DataSources\ChannelManager.datasource" />
+    <None Include="Properties\DataSources\ChannelSelectForm.datasource" />
+    <None Include="Properties\DataSources\Config.datasource" />
+    <None Include="Properties\DataSources\Consts.Channel.datasource" />
+    <None Include="Properties\DataSources\Consts.datasource" />
+    <None Include="Properties\DataSources\Consts.Live.datasource" />
+    <None Include="Properties\DataSources\DirectoryUtils.datasource" />
+    <None Include="Properties\DataSources\IniFile.datasource" />
+    <None Include="Properties\DataSources\Live.datasource" />
+    <None Include="Properties\DataSources\LiveTubeReport.Properties.Resources.datasource" />
+    <None Include="Properties\DataSources\LiveTubeReport.Properties.Settings.datasource" />
+    <None Include="Properties\DataSources\MainForm.datasource" />
+    <None Include="Properties\DataSources\Monitor.datasource" />
+    <None Include="Properties\DataSources\OptionForm.datasource" />
+    <None Include="Properties\DataSources\ProcessExe.datasource" />
+    <None Include="Properties\DataSources\Program.datasource" />
+    <None Include="Properties\DataSources\Schedule.datasource" />
+    <None Include="Properties\DataSources\Utils.datasource" />
+    <None Include="Properties\DataSources\YouTubeDataProvider.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

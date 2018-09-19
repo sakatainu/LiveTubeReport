@@ -14,16 +14,16 @@ using Google.Apis.Http;
 namespace LiveTubeReport {
 	//YouTubeAPIでデータを取得し、LiveDataで返却するクラス
 	public class YouTubeDataProvider {
-		private YouTubeService _youtubeService;
+		private YouTubeService youtubeService;
 
 		public YouTubeDataProvider(string apiKey) {
-			_youtubeService = new YouTubeService(new BaseClientService.Initializer() {
+			youtubeService = new YouTubeService(new BaseClientService.Initializer() {
 				ApiKey = apiKey
 			});
 		}
 
 		public YouTubeDataProvider(IConfigurableHttpClientInitializer credential) {
-			_youtubeService = new YouTubeService(new BaseClientService.Initializer() {
+			youtubeService = new YouTubeService(new BaseClientService.Initializer() {
 				HttpClientInitializer = credential,
 				ApplicationName = "hogehoge"
 			});
@@ -35,7 +35,7 @@ namespace LiveTubeReport {
 		/// </summary>
 		public Dictionary<string, object> GetLiveInfoData(string channelID) {
 			//検索条件の設定
-			var request = _youtubeService.Search.List("id,snippet");
+			var request = youtubeService.Search.List("id,snippet");
 			request.EventType = SearchResource.ListRequest.EventTypeEnum.Live;
 			request.Type = "video";
 			request.Fields = "items(id/videoId,snippet(title,channelTitle))";
@@ -63,7 +63,7 @@ namespace LiveTubeReport {
 		//keylist channelName, thumbnail
 		public Dictionary<string, object> GetChannelData(string channelID) {
 			//検索条件の設定
-			var request = _youtubeService.Search.List("snippet");
+			var request = youtubeService.Search.List("snippet");
 			request.Type = "channel";
 			request.Fields = "items(snippet/title,snippet/thumbnails/default/url)";
 			request.ChannelId = channelID;
@@ -76,6 +76,7 @@ namespace LiveTubeReport {
 			//データ数のカウント
 			if (response.Items.Count > 0) {
 				//データの整形
+				dic[Consts.Channel.ID] = channelID;
 				dic[Consts.Channel.Name] = response.Items[0].Snippet.Title;
 				dic[Consts.Channel.Thumbnail] = response.Items[0].Snippet.Thumbnails.Default__.Url;
 			}
@@ -83,11 +84,11 @@ namespace LiveTubeReport {
 			return dic;
 		}
 
-		private Dictionary<string, object> GetSubscriptionsList(string nextPageToken) {
-			var request = _youtubeService.Subscriptions.List("snippet");
+		private Dictionary<string, object> GetSubscriptions(string nextPageToken) {
+			var request = youtubeService.Subscriptions.List("snippet");
 			request.Mine = true;
 			request.MaxResults = 50;
-			request.Fields = "nextPageToken, items(snippet/title, snippet/channelId, snippet/description, snippet/thumbnails/default/url)";
+			request.Fields = "nextPageToken, items(snippet/title, snippet/resourceId/channelId, snippet/description, snippet/thumbnails/default/url)";
 			if (!string.IsNullOrEmpty(nextPageToken)) {
 				request.PageToken = nextPageToken;
 			}
@@ -104,7 +105,7 @@ namespace LiveTubeReport {
 				foreach (var item in response.Items) {
 					list.Add(new Dictionary<string, object> {
 						{Consts.Channel.Name, item.Snippet.Title },
-						{Consts.Channel.ID, item.Snippet.ChannelId },
+						{Consts.Channel.ID, item.Snippet.ResourceId.ChannelId},
 						{Consts.Channel.Description, item.Snippet.Description },
 						{Consts.Channel.Thumbnail, item.Snippet.Thumbnails.Default__.Url }
 					});
@@ -119,12 +120,12 @@ namespace LiveTubeReport {
 		public List<Dictionary<string, object>> GetSubscriptionsList() {
 			var list = new List<Dictionary<string, object>>();
 
-			var dic = GetSubscriptionsList("");
+			var dic = GetSubscriptions("");
 			if (dic.Keys.Count > 0) {
 				list.AddRange((List<Dictionary<string, object>>)dic["itemList"]);
 
 				while (!string.IsNullOrEmpty((string)dic["nextPageToken"])) {
-					dic = GetSubscriptionsList((string)dic["nextPageToken"]);
+					dic = GetSubscriptions((string)dic["nextPageToken"]);
 
 					if (dic.Keys.Count > 0) {
 						list.AddRange((List<Dictionary<string, object>>)dic["itemList"]);

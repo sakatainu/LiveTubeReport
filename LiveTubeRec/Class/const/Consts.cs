@@ -8,7 +8,7 @@ namespace LiveTubeReport {
 	public static class Consts {
 		public static class Channel {
 			public const string ID = "channelID";
-			public const string Name = "channelName";
+			public const string Name = "channelNames";
 			public const string Thumbnail = "thumbnail";
 			public const string Description = "description";
 		}

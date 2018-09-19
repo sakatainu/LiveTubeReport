@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace LiveTubeReport {
 	public partial class OptionForm : Form {
+		public DataRow[] Rows { get; set; }
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
 		public OptionForm() {
@@ -20,24 +21,9 @@ namespace LiveTubeReport {
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
-			try {
-				using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read)) {
-					var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, new[] { YouTubeService.Scope.YoutubeReadonly }
-						, "user"
-						, CancellationToken.None
-						, new FileDataStore("LiveTubeReport")
-					).Result;
-
-					YouTubeDataProvider youTubeDataProvider = new YouTubeDataProvider(credential);
-					List<Dictionary<string, object>> list = youTubeDataProvider.GetSubscriptionsList();
-
-					ChannelSelectForm selectForm = new ChannelSelectForm();
-					selectForm.argument = list;
-					selectForm.ShowDialog();
-				}
-			}
-			catch (Exception ex) {
-				logger.Debug(ex.ToString());
+			ChannelSelectForm selectForm = new ChannelSelectForm();
+			if (selectForm.ShowDialog() == DialogResult.OK) {
+				Rows = selectForm.Rows;
 			}
 		}
 	}
