@@ -132,6 +132,12 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="class\util\IniFile.cs" />
+    <Compile Include="NotificationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationForm.Designer.cs">
+      <DependentUpon>NotificationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,11 +153,15 @@
     <Compile Include="class\util\Utils.cs" />
     <Compile Include="class\entity\Channel.cs" />
     <Compile Include="class\api\YouTubeDataProvider.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="ChannelSelectForm.resx">
       <DependentUpon>ChannelSelectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationForm.resx">
+      <DependentUpon>NotificationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptionForm.resx">
       <DependentUpon>OptionForm.cs</DependentUpon>
@@ -166,6 +176,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Content Include="icons\Icon1.ico" />
     <Content Include="NLog.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

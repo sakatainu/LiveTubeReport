@@ -17,6 +17,7 @@ namespace LiveTubeReport {
 			public const string Title = "liveTitle";
 			public const string Url = "liveUrl";
 			public const string Status = "liveStatus";
+			public const string Description = "liveDescription";
 		}
 	}
 }

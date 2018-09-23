@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using LiveTubeReport.Properties;
 
 /*
  * 更新日 2018/04/23
@@ -20,10 +21,8 @@ using System.Collections.Generic;
 namespace LiveTubeReport {
 	public partial class MainForm : Form {
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
+		private static Settings settings = Properties.Settings.Default;
 
-		private ChannelManager manager;
-		private System.Timers.Timer _Timer;
-		private Config conf;
 		private Monitor monitor;
 
 		public MainForm() {
@@ -37,9 +36,6 @@ namespace LiveTubeReport {
 		/******************             ここから下はイベントハンドラ              *******************************/
 
 		private void Form1_Load(object sender, EventArgs e) {
-			//設定ファイルからインスタンス設定
-			conf = new Config(@".\config\config.ini");
-
 			//データセットの初期化
 			liveTubeDataSet.Clear();
 			DirectoryUtils.SafeCreateDirectory(@".\data");
@@ -57,36 +53,32 @@ namespace LiveTubeReport {
 				liveTubeDataSet.WriteXml(@".\data\data.xml");
 			}
 
-			//データグリッドビューの初期処理
-			//replaceDataGridView();
-			//statusSetToDataGridView();
-
-			//チャンネルマネージャの初期処理
-			//IniFile ini = new IniFile(@".\config\config.ini");
-
 			logger.Debug("初期設定が完了");
 
 			ProcessExe process = new ProcessExe();
 			process.SynchronizingObject = this;
 			process.EnableRaisingEvents = true;
 
-			/*
-			manager = new ChannelManager(
-				tbChannel, new Schedule(@".\config\config.ini"), new YouTubeDataProvider(conf.ApiKey), process);
-
-			_Timer = new System.Timers.Timer();
-			_Timer.Elapsed += new System.Timers.ElapsedEventHandler(doMonitaring);
-			_Timer.Interval = 60000; //msec
-
-			_Timer.Start();
-			*/
-
 			monitor = new Monitor(tbChannel);
+			monitor.LiveStartEvent += doNotification;
+
 			monitor.Start();
 
 			label1.Text = "[ 状態：記録中 ]";
 
 			logger.Info("チャンネルの記録を開始しました。");
+		}
+
+		private void doNotification(object sender, LiveEventArgs e) {
+			Task.Factory.StartNew(() => showNotificationForm(e.Channel));
+		}
+
+		private void showNotificationForm(Channel channel) {
+			this.Invoke((MethodInvoker)delegate () {
+				NotificationForm notificationForm = new NotificationForm(channel);
+				notificationForm.CloseTime = 30000;
+				notificationForm.Show();
+			});
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
@@ -121,13 +113,11 @@ namespace LiveTubeReport {
 				return;
 			}
 
-			/*
-			if(dataGridView.Rows.Count >= conf.ChannelNumMax || tbChannelTable.Rows.Count >= conf.ChannelNumMax) {
+			if(tbChannel.Rows.Count >= settings.ChannelLimit) {
 				logger.Error("記録可能なチャンネル数が上限に達しているため追加できません。");
 				textBoxChannelID.Text = "";
 				return;
 			}
-			*/
 
 			var row = GetChannelDataRow(channelID);
 			tbChannel.Rows.Add(row);
@@ -150,6 +140,7 @@ namespace LiveTubeReport {
 				}
 			}
 		}
+
 		private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e) {
 			if (dataGridView.SelectedRows.Count < 1) {
 				toolStripMenuItemDelete.Enabled = false;
@@ -158,17 +149,20 @@ namespace LiveTubeReport {
 				toolStripMenuItemDelete.Enabled = true;
 			}
 		}
+
 		private void textBoxChannelID_KeyPress(object sender, KeyPressEventArgs e) {
 			if (e.KeyChar == (char)Keys.Enter) {
 				e.Handled = true;
 				buttonInsert_Click(sender, e);
 			}
 		}
+
 		private void button1_Click(object sender, EventArgs e) {
 			monitor.Start();
 			label1.Text = "[ 状態：記録中 ]";
 			logger.Info("チャンネルの記録を開始しました。");
 		}
+
 		private void button3_Click(object sender, EventArgs e) {
 			monitor.Stop();
 			label1.Text = "[ 状態：停止中 ]";
@@ -201,7 +195,7 @@ namespace LiveTubeReport {
 
 		private void toolStripItemOption_Click(object sender, EventArgs e) {
 			OptionForm option = new OptionForm();
-			if(option.ShowDialog() == DialogResult.OK) {
+			if(option.ShowDialog(this) == DialogResult.OK) {
 				var tmp = option.Rows.CopyToDataTable();
 				tmp.Columns.Add("AddDate");
 				foreach(DataRow row in tmp.Rows) {
@@ -209,6 +203,12 @@ namespace LiveTubeReport {
 					tbChannel.ImportRow(row);
 				}
 			}
+		}
+
+		public void ShowNotification() {
+			notifyIcon.BalloonTipTitle = "おしらせ";
+			notifyIcon.BalloonTipText = "おしらせのメッセージ";
+			notifyIcon.ShowBalloonTip(3000);
 		}
 		/******************          ここから先はプライベートメソッド            ***************************/
 
@@ -267,34 +267,6 @@ namespace LiveTubeReport {
 			}
 		}
 
-		private void doMonitaring(object sender, ElapsedEventArgs e) {
-			doMonitaring();
-		}
-
-		private async Task doMonitaring() {
-			await Task.Run(() => manager.DoBaseLogic());
-
-			statusSetToDataGridView();
-
-			loggingLiveData();
-		}
-		//datatableのデータをdatagridviewに反映させる
-		private void statusSetToDataGridView() {
-			//datatableをdatagridviewに反映させる
-			for (int i = 0; i < dataGridView.Rows.Count; i++) {
-				for (int j = 0; j < tbChannel.Rows.Count; j++) {
-					if (dataGridView.Rows[i].Cells["dgvChannelID"].Value.ToString().Equals(tbChannel.Rows[j]["channelID"].ToString())) {
-						if (true.Equals(tbChannel.Rows[j]["liveStatus"])) {
-							dataGridView.Rows[i].Cells["dgvStatus"].Value = "配信中";
-						}
-						else {
-							dataGridView.Rows[i].Cells["dgvStatus"].Value = "　-　";
-						}
-					}
-				}
-			}
-		}
-
 		private void loggingLiveData() {
 			foreach (DataRow row in tbChannel.Rows) {
 				logger.Debug("Name          : " + row["channelName"].ToString());
@@ -303,7 +275,7 @@ namespace LiveTubeReport {
 		}
 
 		private DataRow GetChannelDataRow(string channelID) {
-			return ConvertToDataRow(new YouTubeDataProvider(conf.ApiKey).GetChannelData(channelID));
+			return ConvertToDataRow(new YouTubeDataProvider(settings.ApiKey).GetChannelData(channelID));
 		}
 
 		private DataRow ConvertToDataRow(Dictionary<string, object> dic) {
@@ -314,6 +286,7 @@ namespace LiveTubeReport {
 			string channelID = (string)dic[Consts.Channel.ID];
 			row[dcChannelID.ColumnName] = channelID;
 			row[dcChannelName.ColumnName] = dic[Consts.Channel.Name];
+			row[dcDescription.ColumnName] = dic[Consts.Channel.Description];
 			row[dcAddDate.ColumnName] = DateTime.Now;
 
 			string url = dic[Consts.Channel.Thumbnail].ToString();

@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 
 namespace LiveTubeReport
 {
-	class Config
+	public class Config
 	{
-		public string ApiKey { get; set; }
-		public string YTDLPath { get; set; }
-		public int ChannelNumMax { get; set; }
+		public static string ApiKey { get; set; }
+		public static string YTDLPath { get; set; }
+		public static int ChannelNumMax { get; set; }
+
 		public Config(string iniPath)
 		{
 			//ファイルを指定して初期化
 			IniFile ini = new IniFile(iniPath);
 
-			this.ApiKey = ini["API", "key"];
-			this.YTDLPath = ini["YouTubeDL", "path"];
-			this.ChannelNumMax = int.Parse( ini["Channel", "max"]);
+			Config.ApiKey = ini["API", "key"];
+			Config.YTDLPath = ini["YouTubeDL", "path"];
+			Config.ChannelNumMax = int.Parse( ini["Channel", "max"]);
 		}
 	}
 }

@@ -26,5 +26,18 @@ namespace LiveTubeReport {
 				Rows = selectForm.Rows;
 			}
 		}
+
+		private void btnNotificationFormSample_Click(object sender, EventArgs e) {
+			this.Invoke((MethodInvoker)delegate () {
+				NotificationForm notificationForm = new NotificationForm();
+				notificationForm.CloseTime = numericUpDown.Value;
+				notificationForm.Show();
+			});
+		}
+
+		private void button2_Click(object sender, EventArgs e) {
+			MainForm mainForm = (MainForm)Owner;
+			mainForm.ShowNotification();
+		}
 	}
 }

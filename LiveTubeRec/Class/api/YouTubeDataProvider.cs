@@ -38,7 +38,7 @@ namespace LiveTubeReport {
 			var request = youtubeService.Search.List("id,snippet");
 			request.EventType = SearchResource.ListRequest.EventTypeEnum.Live;
 			request.Type = "video";
-			request.Fields = "items(id/videoId,snippet(title,channelTitle))";
+			request.Fields = "items(id/videoId,snippet(title,description,channelTitle))";
 			request.ChannelId = channelID;
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -53,6 +53,7 @@ namespace LiveTubeReport {
 				dic[Consts.Live.Status] = true;
 				dic[Consts.Live.ID] = response.Items[0].Id.VideoId;
 				dic[Consts.Live.Title] = response.Items[0].Snippet.Title;
+				dic[Consts.Live.Description] = response.Items[0].Snippet.Description;
 				dic[Consts.Live.Url] = "https://www.youtube.com/watch?v=" + response.Items[0].Id.VideoId;
 			}
 
@@ -65,7 +66,7 @@ namespace LiveTubeReport {
 			//検索条件の設定
 			var request = youtubeService.Search.List("snippet");
 			request.Type = "channel";
-			request.Fields = "items(snippet/title,snippet/thumbnails/default/url)";
+			request.Fields = "items(snippet/title,snippet/description,snippet/thumbnails/default/url)";
 			request.ChannelId = channelID;
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
@@ -78,6 +79,7 @@ namespace LiveTubeReport {
 				//データの整形
 				dic[Consts.Channel.ID] = channelID;
 				dic[Consts.Channel.Name] = response.Items[0].Snippet.Title;
+				dic[Consts.Channel.Description] = response.Items[0].Snippet.Description;
 				dic[Consts.Channel.Thumbnail] = response.Items[0].Snippet.Thumbnails.Default__.Url;
 			}
 
