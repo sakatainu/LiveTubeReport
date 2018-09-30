@@ -12,6 +12,7 @@ using System.Timers;
 using System.Media;
 using System.IO;
 using System.Diagnostics;
+using LiveTubeReport.Entity;
 
 namespace LiveTubeReport {
 	public partial class NotificationForm : Form {
@@ -36,7 +37,7 @@ namespace LiveTubeReport {
 			this.Channel = channel;
 
 			this.Text = channel.Live.StartTime.ToString("F");
-			imgChannel.Image = channel.Thumbnail;
+			imgChannel.Image = channel.Thumbnail.Image;
 			lblChannelName.Text = channel.Name;
 			lblLiveTitle.Text = channel.Live.Title;
 			lblLiveDescription.Text = channel.Live.Description;
@@ -72,8 +73,8 @@ namespace LiveTubeReport {
 		}
 
 		private void NotificationForm_Click(object sender, EventArgs e) {
-			if (Channel?.Live.URL != null) {
-				Process.Start(Channel.Live.URL);
+			if (Channel?.Live.Url != null) {
+				Process.Start(Channel.Live.Url);
 			}
 		}
 	}

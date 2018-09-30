@@ -2,10 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LiveTubeReport.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ApiKey" Type="System.String" Scope="User">
+    <Setting Name="api_key" Type="System.String" Scope="User">
       <Value Profile="(Default)">AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA</Value>
     </Setting>
-    <Setting Name="ChannelLimit" Type="System.Int32" Scope="User">
+    <Setting Name="channel_limit" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="Interval" Type="System.Int32" Scope="User">

@@ -93,6 +93,7 @@
 			this.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(100, 125);
 			this.Name = "NotificationForm";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;

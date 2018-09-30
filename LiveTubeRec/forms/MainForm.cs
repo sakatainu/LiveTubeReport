@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using LiveTubeReport.Properties;
+using LiveTubeReport.Entity;
+using LiveTubeReport.Api.Util;
 
 /*
  * 更新日 2018/04/23
@@ -28,6 +30,39 @@ namespace LiveTubeReport {
 		public MainForm() {
 			InitializeComponent();
 
+			dcChannelID.ColumnName = Consts.Channel.ID;
+			dcChannelName.ColumnName = Consts.Channel.Name;
+			dcAddDate.ColumnName = Consts.Channel.AddDate;
+			dcDescription.ColumnName = Consts.Channel.Description;
+			dcThumbnail.ColumnName = Consts.Channel.Thumbnail.Image;
+			dcThumbnailUrl.ColumnName = Consts.Channel.Thumbnail.Url;
+			dcThumbnailPath.ColumnName = Consts.Channel.Thumbnail.Path;
+			dcLastRequestTime.ColumnName = Consts.Channel.LastRequestTime;
+			dcNextRequestTime.ColumnName = Consts.Channel.NextRequestTime;
+
+			dcLiveStatus.ColumnName = Consts.Live.Status;
+			dcLiveID.ColumnName = Consts.Live.ID;
+			dcLiveTitle.ColumnName = Consts.Live.Title;
+			dcLiveDescription.ColumnName = Consts.Live.Description;
+			dcLiveUrl.ColumnName = Consts.Live.Url;
+			dcLiveStartTime.ColumnName = Consts.Live.StartTime;
+			dcLiveEndTime.ColumnName = Consts.Live.EndTime;
+
+			dgvChannelID.DataPropertyName = dcChannelID.ColumnName;
+			dgvChannelName.DataPropertyName = dcChannelName.ColumnName;
+			dgvAddDate.DataPropertyName = dcAddDate.ColumnName;
+			dgvDescription.DataPropertyName = dcDescription.ColumnName;
+			dgvThumbnail.DataPropertyName = dcThumbnail.ColumnName;
+			dgvLastRequestDate.DataPropertyName = dcLastRequestTime.ColumnName;
+
+			dgvStatus.DataPropertyName = dcLiveStatus.ColumnName;
+			dgvLiveID.DataPropertyName = dcLiveID.ColumnName;
+			dgvLiveTitle.DataPropertyName = dcLiveTitle.ColumnName;
+			dgvLiveURL.DataPropertyName = dcLiveUrl.ColumnName;
+			dgvLiveDescription.DataPropertyName = dcLiveDescription.ColumnName;
+			dgvLiveStartTime.DataPropertyName = dcLiveStartTime.ColumnName;
+			dgvLiveEndTime.DataPropertyName= dcLiveEndTime.ColumnName;
+			
 			ToolStripProfessionalRenderer renderer = new ToolStripProfessionalRenderer();
 			renderer.RoundedEdges = false;
 			toolStrip.Renderer = renderer;
@@ -45,7 +80,7 @@ namespace LiveTubeReport {
 				liveTubeDataSet.ReadXml(@".\data\data.xml");
 
 				foreach(DataRow row in tbChannel.Rows) {
-					row[dcThumbnail.ColumnName] = new Bitmap((string)row[dcThumbnailPath.ColumnName]);
+					row[Consts.Channel.Thumbnail.Image] = new Bitmap((string)row[Consts.Channel.Thumbnail.Path]);
 				}
 				logger.Info("データの読み込みに成功しました。");
 			}
@@ -55,13 +90,8 @@ namespace LiveTubeReport {
 
 			logger.Debug("初期設定が完了");
 
-			ProcessExe process = new ProcessExe();
-			process.SynchronizingObject = this;
-			process.EnableRaisingEvents = true;
-
 			monitor = new Monitor(tbChannel);
-			monitor.LiveStartEvent += doNotification;
-
+			monitor.LiveStartEvent += DoNotification;
 			monitor.Start();
 
 			label1.Text = "[ 状態：記録中 ]";
@@ -69,14 +99,15 @@ namespace LiveTubeReport {
 			logger.Info("チャンネルの記録を開始しました。");
 		}
 
-		private void doNotification(object sender, LiveEventArgs e) {
-			Task.Factory.StartNew(() => showNotificationForm(e.Channel));
+		private void DoNotification(object sender, LiveEventArgs e) {
+			Task.Factory.StartNew(() => ShowNotificationForm(e.Channel));
 		}
 
-		private void showNotificationForm(Channel channel) {
+		private void ShowNotificationForm(Channel channel) {
 			this.Invoke((MethodInvoker)delegate () {
-				NotificationForm notificationForm = new NotificationForm(channel);
-				notificationForm.CloseTime = 30000;
+				NotificationForm notificationForm = new NotificationForm(channel) {
+					CloseTime = 30000
+				};
 				notificationForm.Show();
 			});
 		}
@@ -105,7 +136,7 @@ namespace LiveTubeReport {
 			}
 
 			string channelID = ExtractChannelID(input);
-			if (string.IsNullOrWhiteSpace(channelID) || hasChannelID(channelID)) {
+			if (string.IsNullOrWhiteSpace(channelID) || HasChannelID(channelID)) {
 				logger.Error("入力したURLが正しくないか、一覧に存在しているため追加できません。");
 
 				textBoxChannelID.Focus();
@@ -113,7 +144,7 @@ namespace LiveTubeReport {
 				return;
 			}
 
-			if(tbChannel.Rows.Count >= settings.ChannelLimit) {
+			if(tbChannel.Rows.Count >= settings.channel_limit) {
 				logger.Error("記録可能なチャンネル数が上限に達しているため追加できません。");
 				textBoxChannelID.Text = "";
 				return;
@@ -121,7 +152,7 @@ namespace LiveTubeReport {
 
 			var row = GetChannelDataRow(channelID);
 			tbChannel.Rows.Add(row);
-			logger.Info("チャンネル名 " + (string)row[dcChannelName.ColumnName] + " を追加しました。");
+			logger.Info("チャンネル名 " + (string)row[Consts.Channel.Name] + " を追加しました。");
 
 			textBoxChannelID.Clear();
 		}
@@ -205,7 +236,7 @@ namespace LiveTubeReport {
 			}
 		}
 
-		public void ShowNotification() {
+		public void ShowBalloonNotification() {
 			notifyIcon.BalloonTipTitle = "おしらせ";
 			notifyIcon.BalloonTipText = "おしらせのメッセージ";
 			notifyIcon.ShowBalloonTip(3000);
@@ -214,10 +245,10 @@ namespace LiveTubeReport {
 
 		//リストにチャンネルIDが登録されているかをチェック
 		// 登録済み:true 未登録:false
-		private bool hasChannelID(string channelID) {
+		private bool HasChannelID(string channelID) {
 			logger.Debug("start");
 
-			var rows = tbChannel.Select(dcChannelID.ColumnName + "=" + "'" + channelID + "'");
+			var rows = tbChannel.Select(Consts.Channel.ID + "=" + "'" + channelID + "'");
 
 			if (rows.Length > 0) {
 				return true;
@@ -275,36 +306,21 @@ namespace LiveTubeReport {
 		}
 
 		private DataRow GetChannelDataRow(string channelID) {
-			return ConvertToDataRow(new YouTubeDataProvider(settings.ApiKey).GetChannelData(channelID));
+			return ToDataRow(new YouTubeDataProvider(settings.api_key).GetChannelData(channelID));
 		}
 
-		private DataRow ConvertToDataRow(Dictionary<string, object> dic) {
+		private DataRow ToDataRow(Channel channel) {
 			logger.Trace("");
 
 			DataRow row = tbChannel.NewRow();
 
-			string channelID = (string)dic[Consts.Channel.ID];
-			row[dcChannelID.ColumnName] = channelID;
-			row[dcChannelName.ColumnName] = dic[Consts.Channel.Name];
-			row[dcDescription.ColumnName] = dic[Consts.Channel.Description];
-			row[dcAddDate.ColumnName] = DateTime.Now;
-
-			string url = dic[Consts.Channel.Thumbnail].ToString();
-			string path = @".\data\image\" + channelID + ".png";
-
-			row[dcThumbnailUrl.ColumnName] = url;
-			row[dcThumbnailPath.ColumnName] = path;
-
-			Bitmap bmp = null;
-			if (!System.IO.File.Exists(path)) {
-				bmp = new Bitmap(Utils.loadImageFromURL(url));
-				bmp.Save(@".\data\image\" + channelID + ".png", System.Drawing.Imaging.ImageFormat.Png);
-			}
-			else {
-				bmp = new Bitmap(path);
-			}
-
-			row[dcThumbnail.ColumnName] = bmp;
+			row[Consts.Channel.ID] = channel.ID;
+			row[Consts.Channel.Name] = channel.Name;
+			row[Consts.Channel.Description] = channel.Description;
+			row[Consts.Channel.AddDate] = DateTime.Now;
+			row[Consts.Channel.Thumbnail.Url] = channel.Thumbnail.Url;
+			row[Consts.Channel.Thumbnail.Path] = channel.Thumbnail.Path;
+			row[Consts.Channel.Thumbnail.Image] = channel.Thumbnail.Image;
 
 			return row;
 		}
@@ -317,6 +333,18 @@ namespace LiveTubeReport {
 					e.Value = "未配信";
 				}
 			}
+		}
+
+		private void 終了ToolStripMenuItem_Click(object sender, EventArgs e) {
+			this.Close();
+		}
+
+		private void 登録チャンネルの取得ToolStripMenuItem_Click(object sender, EventArgs e) {
+
+		}
+
+		private void フォルダを開くToolStripMenuItem_Click(object sender, EventArgs e) {
+			System.Diagnostics.Process.Start(@".\");
 		}
 	}
 }

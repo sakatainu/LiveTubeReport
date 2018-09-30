@@ -37,7 +37,7 @@ namespace LiveTubeReport {
 
 		private void button2_Click(object sender, EventArgs e) {
 			MainForm mainForm = (MainForm)Owner;
-			mainForm.ShowNotification();
+			mainForm.ShowBalloonNotification();
 		}
 	}
 }

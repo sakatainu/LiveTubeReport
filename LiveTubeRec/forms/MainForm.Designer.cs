@@ -37,7 +37,6 @@
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.textBox_Log = new System.Windows.Forms.TextBox();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.dataGridView = new System.Windows.Forms.DataGridView();
 			this.dgvThumbnail = new System.Windows.Forms.DataGridViewImageColumn();
 			this.dgvChannelID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,12 +45,12 @@
 			this.dgvStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvLiveTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvLiveURL = new System.Windows.Forms.DataGridViewLinkColumn();
-			this.LiveDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvLiveDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvLiveStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgvLiveEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvLiveEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvLastRequestDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgvAddDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.thumbnailDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgvDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.liveTubeDataSet = new System.Data.DataSet();
@@ -64,12 +63,11 @@
 			this.dcLiveStartTime = new System.Data.DataColumn();
 			this.dcLiveEndTime = new System.Data.DataColumn();
 			this.dcLiveStatus = new System.Data.DataColumn();
-			this.dcLiveLastRequestTime = new System.Data.DataColumn();
+			this.dcLastRequestTime = new System.Data.DataColumn();
 			this.dcThumbnailUrl = new System.Data.DataColumn();
-			this.dcLiveNextRequestTime = new System.Data.DataColumn();
+			this.dcNextRequestTime = new System.Data.DataColumn();
 			this.dcAddDate = new System.Data.DataColumn();
 			this.dcThumbnailPath = new System.Data.DataColumn();
-			this.dcAppStatus = new System.Data.DataColumn();
 			this.dcThumbnail = new System.Data.DataColumn();
 			this.dcDescription = new System.Data.DataColumn();
 			this.dcLiveDescription = new System.Data.DataColumn();
@@ -83,13 +81,24 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.フォルダを開くToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolStripItemOption = new System.Windows.Forms.ToolStripMenuItem();
+			this.GetSubscriptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripDropDownButton4 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.youTubeトップページVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.youTubeLiveトップページLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.バージョン情報ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
 			this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-			this.groupBox1.SuspendLayout();
+			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
 			this.contextMenuStrip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.liveTubeDataSet)).BeginInit();
@@ -97,34 +106,23 @@
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.toolStrip.SuspendLayout();
+			this.tabControl1.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// textBox_Log
 			// 
-			this.textBox_Log.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox_Log.BackColor = System.Drawing.SystemColors.Window;
-			this.textBox_Log.Location = new System.Drawing.Point(12, 18);
+			this.textBox_Log.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox_Log.Location = new System.Drawing.Point(3, 3);
 			this.textBox_Log.Multiline = true;
 			this.textBox_Log.Name = "textBox_Log";
 			this.textBox_Log.ReadOnly = true;
 			this.textBox_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBox_Log.Size = new System.Drawing.Size(893, 103);
+			this.textBox_Log.Size = new System.Drawing.Size(903, 379);
 			this.textBox_Log.TabIndex = 0;
 			this.textBox_Log.TextChanged += new System.EventHandler(this.textBox_Log_TextChanged);
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Controls.Add(this.textBox_Log);
-			this.groupBox1.Location = new System.Drawing.Point(0, 361);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(917, 133);
-			this.groupBox1.TabIndex = 3;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "ログ";
 			// 
 			// dataGridView
 			// 
@@ -133,9 +131,6 @@
 			this.dataGridView.AllowUserToResizeRows = false;
 			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
 			this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridView.AutoGenerateColumns = false;
 			this.dataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
 			this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -147,22 +142,23 @@
             this.dgvStatus,
             this.dgvLiveTitle,
             this.dgvLiveURL,
-            this.LiveDescription,
+            this.dgvLiveDescription,
             this.dgvLiveStartTime,
-            this.dgvLiveEndDate,
+            this.dgvLiveEndTime,
             this.dgvLastRequestDate,
             this.dgvAddDate,
-            this.thumbnailDataGridViewTextBoxColumn});
+            this.dgvDescription});
 			this.dataGridView.ContextMenuStrip = this.contextMenuStrip;
 			this.dataGridView.DataMember = "Channel";
 			this.dataGridView.DataSource = this.liveTubeDataSet;
-			this.dataGridView.Location = new System.Drawing.Point(12, 92);
+			this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dataGridView.Location = new System.Drawing.Point(3, 3);
 			this.dataGridView.Name = "dataGridView";
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowHeadersVisible = false;
 			this.dataGridView.RowTemplate.Height = 21;
 			this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView.Size = new System.Drawing.Size(893, 263);
+			this.dataGridView.Size = new System.Drawing.Size(903, 379);
 			this.dataGridView.TabIndex = 2;
 			this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
 			this.dataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
@@ -227,12 +223,12 @@
 			this.dgvLiveURL.ReadOnly = true;
 			this.dgvLiveURL.Width = 250;
 			// 
-			// LiveDescription
+			// dgvLiveDescription
 			// 
-			this.LiveDescription.DataPropertyName = "LiveDescription";
-			this.LiveDescription.HeaderText = "放送概要";
-			this.LiveDescription.Name = "LiveDescription";
-			this.LiveDescription.ReadOnly = true;
+			this.dgvLiveDescription.DataPropertyName = "LiveDescription";
+			this.dgvLiveDescription.HeaderText = "放送概要";
+			this.dgvLiveDescription.Name = "dgvLiveDescription";
+			this.dgvLiveDescription.ReadOnly = true;
 			// 
 			// dgvLiveStartTime
 			// 
@@ -245,20 +241,20 @@
 			this.dgvLiveStartTime.ReadOnly = true;
 			this.dgvLiveStartTime.Width = 110;
 			// 
-			// dgvLiveEndDate
+			// dgvLiveEndTime
 			// 
-			this.dgvLiveEndDate.DataPropertyName = "LiveEndTime";
+			this.dgvLiveEndTime.DataPropertyName = "LiveEndTime";
 			dataGridViewCellStyle4.Format = "G";
 			dataGridViewCellStyle4.NullValue = null;
-			this.dgvLiveEndDate.DefaultCellStyle = dataGridViewCellStyle4;
-			this.dgvLiveEndDate.HeaderText = "放送終了";
-			this.dgvLiveEndDate.Name = "dgvLiveEndDate";
-			this.dgvLiveEndDate.ReadOnly = true;
-			this.dgvLiveEndDate.Width = 110;
+			this.dgvLiveEndTime.DefaultCellStyle = dataGridViewCellStyle4;
+			this.dgvLiveEndTime.HeaderText = "放送終了";
+			this.dgvLiveEndTime.Name = "dgvLiveEndTime";
+			this.dgvLiveEndTime.ReadOnly = true;
+			this.dgvLiveEndTime.Width = 110;
 			// 
 			// dgvLastRequestDate
 			// 
-			this.dgvLastRequestDate.DataPropertyName = "LiveLastRequestTime";
+			this.dgvLastRequestDate.DataPropertyName = "LastRequestTime";
 			dataGridViewCellStyle5.Format = "G";
 			dataGridViewCellStyle5.NullValue = null;
 			this.dgvLastRequestDate.DefaultCellStyle = dataGridViewCellStyle5;
@@ -277,12 +273,12 @@
 			this.dgvAddDate.ReadOnly = true;
 			this.dgvAddDate.Width = 110;
 			// 
-			// thumbnailDataGridViewTextBoxColumn
+			// dgvDescription
 			// 
-			this.thumbnailDataGridViewTextBoxColumn.DataPropertyName = "Description";
-			this.thumbnailDataGridViewTextBoxColumn.HeaderText = "概要";
-			this.thumbnailDataGridViewTextBoxColumn.Name = "thumbnailDataGridViewTextBoxColumn";
-			this.thumbnailDataGridViewTextBoxColumn.ReadOnly = true;
+			this.dgvDescription.DataPropertyName = "Description";
+			this.dgvDescription.HeaderText = "概要";
+			this.dgvDescription.Name = "dgvDescription";
+			this.dgvDescription.ReadOnly = true;
 			// 
 			// contextMenuStrip
 			// 
@@ -316,19 +312,18 @@
             this.dcLiveStartTime,
             this.dcLiveEndTime,
             this.dcLiveStatus,
-            this.dcLiveLastRequestTime,
+            this.dcLastRequestTime,
             this.dcThumbnailUrl,
-            this.dcLiveNextRequestTime,
+            this.dcNextRequestTime,
             this.dcAddDate,
             this.dcThumbnailPath,
-            this.dcAppStatus,
             this.dcThumbnail,
             this.dcDescription,
             this.dcLiveDescription});
 			this.tbChannel.Constraints.AddRange(new System.Data.Constraint[] {
             new System.Data.UniqueConstraint("Constraint1", new string[] {
                         "ChannelID"}, false)});
-			this.tbChannel.TableName = "Channel";
+			this.tbChannel.TableName = "channel";
 			// 
 			// dcChannelName
 			// 
@@ -369,19 +364,19 @@
 			this.dcLiveStatus.DataType = typeof(bool);
 			this.dcLiveStatus.DefaultValue = false;
 			// 
-			// dcLiveLastRequestTime
+			// dcLastRequestTime
 			// 
-			this.dcLiveLastRequestTime.ColumnName = "LiveLastRequestTime";
-			this.dcLiveLastRequestTime.DataType = typeof(System.DateTime);
+			this.dcLastRequestTime.ColumnName = "LastRequestTime";
+			this.dcLastRequestTime.DataType = typeof(System.DateTime);
 			// 
 			// dcThumbnailUrl
 			// 
 			this.dcThumbnailUrl.ColumnName = "ThumbnailUrl";
 			// 
-			// dcLiveNextRequestTime
+			// dcNextRequestTime
 			// 
-			this.dcLiveNextRequestTime.ColumnName = "LiveNextRequestTime";
-			this.dcLiveNextRequestTime.DataType = typeof(System.DateTime);
+			this.dcNextRequestTime.ColumnName = "NextRequestTime";
+			this.dcNextRequestTime.DataType = typeof(System.DateTime);
 			// 
 			// dcAddDate
 			// 
@@ -391,13 +386,6 @@
 			// 
 			this.dcThumbnailPath.Caption = "ThumbnailPath";
 			this.dcThumbnailPath.ColumnName = "ThumbnailPath";
-			// 
-			// dcAppStatus
-			// 
-			this.dcAppStatus.ColumnMapping = System.Data.MappingType.Hidden;
-			this.dcAppStatus.ColumnName = "AppStatus";
-			this.dcAppStatus.DataType = typeof(bool);
-			this.dcAppStatus.DefaultValue = false;
 			// 
 			// dcThumbnail
 			// 
@@ -416,6 +404,8 @@
 			// textBoxChannelID
 			// 
 			this.textBoxChannelID.AllowDrop = true;
+			this.textBoxChannelID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxChannelID.Location = new System.Drawing.Point(6, 19);
 			this.textBoxChannelID.Name = "textBoxChannelID";
 			this.textBoxChannelID.Size = new System.Drawing.Size(637, 19);
@@ -424,6 +414,7 @@
 			// 
 			// buttonInsert
 			// 
+			this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonInsert.Location = new System.Drawing.Point(649, 17);
 			this.buttonInsert.Name = "buttonInsert";
 			this.buttonInsert.Size = new System.Drawing.Size(75, 23);
@@ -434,6 +425,8 @@
 			// 
 			// groupBox2
 			// 
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.Controls.Add(this.textBoxChannelID);
 			this.groupBox2.Controls.Add(this.buttonInsert);
 			this.groupBox2.Location = new System.Drawing.Point(12, 32);
@@ -445,6 +438,7 @@
 			// 
 			// groupBox3
 			// 
+			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.Controls.Add(this.button3);
 			this.groupBox3.Controls.Add(this.button1);
 			this.groupBox3.Controls.Add(this.button2);
@@ -501,7 +495,9 @@
 			this.toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
-            this.toolStripDropDownButton2});
+            this.toolStripDropDownButton3,
+            this.toolStripDropDownButton2,
+            this.toolStripDropDownButton4});
 			this.toolStrip.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
@@ -513,40 +509,113 @@
 			// 
 			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.フォルダを開くToolStripMenuItem,
+            this.toolStripSeparator1,
             this.終了ToolStripMenuItem});
 			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
 			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
 			this.toolStripDropDownButton1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.toolStripDropDownButton1.ShowDropDownArrow = false;
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(55, 22);
-			this.toolStripDropDownButton1.Text = "ファイル";
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(69, 22);
+			this.toolStripDropDownButton1.Text = "ファイル(&F)";
+			// 
+			// フォルダを開くToolStripMenuItem
+			// 
+			this.フォルダを開くToolStripMenuItem.Name = "フォルダを開くToolStripMenuItem";
+			this.フォルダを開くToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.フォルダを開くToolStripMenuItem.Text = "フォルダを開く(&F)";
+			this.フォルダを開くToolStripMenuItem.Click += new System.EventHandler(this.フォルダを開くToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
 			// 
 			// 終了ToolStripMenuItem
 			// 
 			this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
-			this.終了ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.終了ToolStripMenuItem.Text = "終了";
+			this.終了ToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.終了ToolStripMenuItem.Text = "終了(&X)";
+			this.終了ToolStripMenuItem.Click += new System.EventHandler(this.終了ToolStripMenuItem_Click);
+			// 
+			// toolStripDropDownButton3
+			// 
+			this.toolStripDropDownButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
+			this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton3.Name = "toolStripDropDownButton3";
+			this.toolStripDropDownButton3.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+			this.toolStripDropDownButton3.ShowDropDownArrow = false;
+			this.toolStripDropDownButton3.Size = new System.Drawing.Size(62, 22);
+			this.toolStripDropDownButton3.Text = "通知(&N)";
 			// 
 			// toolStripDropDownButton2
 			// 
 			this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripItemOption});
+            this.toolStripItemOption,
+            this.GetSubscriptionsToolStripMenuItem});
 			this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
 			this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
 			this.toolStripDropDownButton2.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.toolStripDropDownButton2.ShowDropDownArrow = false;
-			this.toolStripDropDownButton2.Size = new System.Drawing.Size(48, 22);
-			this.toolStripDropDownButton2.Text = "ツール";
+			this.toolStripDropDownButton2.Size = new System.Drawing.Size(62, 22);
+			this.toolStripDropDownButton2.Text = "ツール(&T)";
 			// 
 			// toolStripItemOption
 			// 
 			this.toolStripItemOption.Name = "toolStripItemOption";
-			this.toolStripItemOption.Size = new System.Drawing.Size(180, 22);
-			this.toolStripItemOption.Text = "オプション";
+			this.toolStripItemOption.Size = new System.Drawing.Size(309, 22);
+			this.toolStripItemOption.Text = "LiveTubeReportの設定(&S)...";
 			this.toolStripItemOption.Click += new System.EventHandler(this.toolStripItemOption_Click);
+			// 
+			// GetSubscriptionsToolStripMenuItem
+			// 
+			this.GetSubscriptionsToolStripMenuItem.Name = "GetSubscriptionsToolStripMenuItem";
+			this.GetSubscriptionsToolStripMenuItem.Size = new System.Drawing.Size(309, 22);
+			this.GetSubscriptionsToolStripMenuItem.Text = "登録チャンネルから記録するチャンネルを取得(&C)...";
+			this.GetSubscriptionsToolStripMenuItem.Click += new System.EventHandler(this.登録チャンネルの取得ToolStripMenuItem_Click);
+			// 
+			// toolStripDropDownButton4
+			// 
+			this.toolStripDropDownButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolStripDropDownButton4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.youTubeトップページVToolStripMenuItem,
+            this.youTubeLiveトップページLToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.バージョン情報ToolStripMenuItem});
+			this.toolStripDropDownButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton4.Image")));
+			this.toolStripDropDownButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton4.Name = "toolStripDropDownButton4";
+			this.toolStripDropDownButton4.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+			this.toolStripDropDownButton4.ShowDropDownArrow = false;
+			this.toolStripDropDownButton4.Size = new System.Drawing.Size(67, 22);
+			this.toolStripDropDownButton4.Text = "ヘルプ(H)";
+			// 
+			// youTubeトップページVToolStripMenuItem
+			// 
+			this.youTubeトップページVToolStripMenuItem.Name = "youTubeトップページVToolStripMenuItem";
+			this.youTubeトップページVToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+			this.youTubeトップページVToolStripMenuItem.Text = "YouTubeトップページ(&V)";
+			// 
+			// youTubeLiveトップページLToolStripMenuItem
+			// 
+			this.youTubeLiveトップページLToolStripMenuItem.Name = "youTubeLiveトップページLToolStripMenuItem";
+			this.youTubeLiveトップページLToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+			this.youTubeLiveトップページLToolStripMenuItem.Text = "YouTubeLiveトップページ(&L)";
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(204, 6);
+			// 
+			// バージョン情報ToolStripMenuItem
+			// 
+			this.バージョン情報ToolStripMenuItem.Name = "バージョン情報ToolStripMenuItem";
+			this.バージョン情報ToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+			this.バージョン情報ToolStripMenuItem.Text = "バージョン情報(&A)...";
 			// 
 			// dataGridViewImageColumn1
 			// 
@@ -571,24 +640,58 @@
 			this.notifyIcon.Text = "notifyIcon";
 			this.notifyIcon.Visible = true;
 			// 
+			// tabControl1
+			// 
+			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Location = new System.Drawing.Point(0, 86);
+			this.tabControl1.Name = "tabControl1";
+			this.tabControl1.SelectedIndex = 0;
+			this.tabControl1.Size = new System.Drawing.Size(917, 411);
+			this.tabControl1.TabIndex = 6;
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Controls.Add(this.dataGridView);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(909, 385);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "チャンネル";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.textBox_Log);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(909, 385);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "ログ";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.ClientSize = new System.Drawing.Size(917, 518);
+			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.toolStrip);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.groupBox3);
-			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.dataGridView);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MinimumSize = new System.Drawing.Size(350, 240);
 			this.Name = "MainForm";
 			this.Text = "LiveTubeReport";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.Load += new System.EventHandler(this.Form1_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
 			this.contextMenuStrip.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.liveTubeDataSet)).EndInit();
@@ -598,6 +701,10 @@
 			this.groupBox3.ResumeLayout(false);
 			this.toolStrip.ResumeLayout(false);
 			this.toolStrip.PerformLayout();
+			this.tabControl1.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage2.ResumeLayout(false);
+			this.tabPage2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -606,7 +713,6 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBox_Log;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.TextBox textBoxChannelID;
         private System.Windows.Forms.Button buttonInsert;
@@ -621,12 +727,11 @@
 		private System.Data.DataColumn dcLiveStartTime;
 		private System.Data.DataColumn dcLiveEndTime;
 		private System.Data.DataColumn dcLiveStatus;
-		private System.Data.DataColumn dcLiveLastRequestTime;
+		private System.Data.DataColumn dcLastRequestTime;
 		private System.Data.DataColumn dcThumbnailUrl;
-		private System.Data.DataColumn dcLiveNextRequestTime;
+		private System.Data.DataColumn dcNextRequestTime;
 		private System.Data.DataColumn dcAddDate;
 		private System.Data.DataColumn dcThumbnailPath;
-		private System.Data.DataColumn dcAppStatus;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.GroupBox groupBox3;
@@ -644,6 +749,7 @@
 		private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
 		private System.Data.DataColumn dcLiveDescription;
+		private System.Windows.Forms.NotifyIcon notifyIcon;
 		private System.Windows.Forms.DataGridViewImageColumn dgvThumbnail;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvChannelID;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvChannelName;
@@ -651,13 +757,24 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvStatus;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLiveTitle;
 		private System.Windows.Forms.DataGridViewLinkColumn dgvLiveURL;
-		private System.Windows.Forms.DataGridViewTextBoxColumn LiveDescription;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLiveDescription;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLiveStartTime;
-		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLiveEndDate;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLiveEndTime;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvLastRequestDate;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dgvAddDate;
-		private System.Windows.Forms.DataGridViewTextBoxColumn thumbnailDataGridViewTextBoxColumn;
-		private System.Windows.Forms.NotifyIcon notifyIcon;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dgvDescription;
+		private System.Windows.Forms.ToolStripMenuItem フォルダを開くToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton3;
+		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton4;
+		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.ToolStripMenuItem GetSubscriptionsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem youTubeトップページVToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem youTubeLiveトップページLToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.ToolStripMenuItem バージョン情報ToolStripMenuItem;
 	}
 }
 

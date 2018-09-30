@@ -1,140 +1,122 @@
-﻿using System;
+﻿using Google.Apis.Http;
+using Google.Apis.YouTube.v3;
+using LiveTubeReport.Api.Core;
+using LiveTubeReport.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
-using System.Diagnostics;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Data;
-using Google.Apis.Http;
 
-namespace LiveTubeReport {
+namespace LiveTubeReport.Api.Util {
 	//YouTubeAPIでデータを取得し、LiveDataで返却するクラス
-	public class YouTubeDataProvider {
-		private YouTubeService youtubeService;
-
-		public YouTubeDataProvider(string apiKey) {
-			youtubeService = new YouTubeService(new BaseClientService.Initializer() {
-				ApiKey = apiKey
-			});
-		}
-
-		public YouTubeDataProvider(IConfigurableHttpClientInitializer credential) {
-			youtubeService = new YouTubeService(new BaseClientService.Initializer() {
-				HttpClientInitializer = credential,
-				ApplicationName = "hogehoge"
-			});
-		}
+	public class YouTubeDataProvider : YouTubeDataApiGateway {
+		public YouTubeDataProvider(string apiKey) : base(apiKey) { }
+		public YouTubeDataProvider(IConfigurableHttpClientInitializer credential) : base(credential) { }
 
 		/// <summary>
 		///チャンネルから生放送の情報を取得します
 		///keylist liveID, liveTitle, liveUrl
 		/// </summary>
-		public Dictionary<string, object> GetLiveInfoData(string channelID) {
-			//検索条件の設定
-			var request = youtubeService.Search.List("id,snippet");
-			request.EventType = SearchResource.ListRequest.EventTypeEnum.Live;
-			request.Type = "video";
-			request.Fields = "items(id/videoId,snippet(title,description,channelTitle))";
-			request.ChannelId = channelID;
-
-			Dictionary<string, object> dic = new Dictionary<string, object>();
-			dic.Add(Consts.Live.Status, false);
-
-			//APIの発行
-			var response = request.Execute();
-
-			//データ数のカウント
-			if (response.Items.Count > 0) {
-				//データの整形
-				dic[Consts.Live.Status] = true;
-				dic[Consts.Live.ID] = response.Items[0].Id.VideoId;
-				dic[Consts.Live.Title] = response.Items[0].Snippet.Title;
-				dic[Consts.Live.Description] = response.Items[0].Snippet.Description;
-				dic[Consts.Live.Url] = "https://www.youtube.com/watch?v=" + response.Items[0].Id.VideoId;
+		public new Live GetLiveInfoData(string channelID) {
+			var response = base.GetLiveInfoData(channelID);
+			if (response.Items.Count <= 0) {
+				return new Live() { Status = false };
 			}
 
-			return dic;
+			var item = response.Items[0];
+
+			Live live = new Live {
+				Status = true,
+				ID = item.Id.VideoId,
+				Title = item.Snippet.Title,
+				Description = item.Snippet.Description,
+				Url = "https://www.youtube.com/watch?v=" + item.Id.VideoId
+			};
+
+			return live;
 		}
+
 
 		//チャンネルIDからチャンネルの情報を取得します
 		//keylist channelName, thumbnail
-		public Dictionary<string, object> GetChannelData(string channelID) {
-			//検索条件の設定
-			var request = youtubeService.Search.List("snippet");
-			request.Type = "channel";
-			request.Fields = "items(snippet/title,snippet/description,snippet/thumbnails/default/url)";
-			request.ChannelId = channelID;
+		public new Channel GetChannelData(string channelID) {
+			var res = base.GetChannelData(channelID);
 
-			Dictionary<string, object> dic = new Dictionary<string, object>();
-
-			//APIの発行
-			var response = request.Execute();
-
-			//データ数のカウント
-			if (response.Items.Count > 0) {
-				//データの整形
-				dic[Consts.Channel.ID] = channelID;
-				dic[Consts.Channel.Name] = response.Items[0].Snippet.Title;
-				dic[Consts.Channel.Description] = response.Items[0].Snippet.Description;
-				dic[Consts.Channel.Thumbnail] = response.Items[0].Snippet.Thumbnails.Default__.Url;
+			if (res.Items.Count <= 0) {
+				return null;
 			}
 
-			return dic;
+			var item = res.Items[0];
+
+			var channel = new Channel {
+				ID = item.Id.ChannelId,
+				Name = item.Snippet.Title,
+				Description = item.Snippet.Description,
+				Thumbnail = new Thumbnail {
+					Url = item.Snippet.Thumbnails.Default__.Url
+				}
+			};
+
+			return channel;
 		}
 
-		private Dictionary<string, object> GetSubscriptions(string nextPageToken) {
-			var request = youtubeService.Subscriptions.List("snippet");
-			request.Mine = true;
-			request.MaxResults = 50;
-			request.Fields = "nextPageToken, items(snippet/title, snippet/resourceId/channelId, snippet/description, snippet/thumbnails/default/url)";
-			if (!string.IsNullOrEmpty(nextPageToken)) {
-				request.PageToken = nextPageToken;
-			}
+		/// <summary>
+		/// ユーザーの登録チャンネルを取得します。
+		/// </summary>
+		/// <returns></returns>
+		public List<Channel> GetSubscriptions() {
+			var list = new List<Channel>();
 
-			Dictionary<string, object> dic = new Dictionary<string, object>();
+			string nextPageToken = null;
+			do {
+				var res = base.GetSubscriptions(nextPageToken);
+				foreach (var item in res.Items) {
+					var channel = new Channel() {
+						ID = item.Snippet.ResourceId.ChannelId,
+						Name = item.Snippet.Title,
+						Description = item.Snippet.Description,
+						PublishedAt = item.Snippet.PublishedAt ?? new DateTime()
+					};
+					channel.Thumbnail.Url = item.Snippet.Thumbnails.Default__.Url;
 
-			//APIの発行
-			var response = request.Execute();
-
-			//データ数のカウント
-			if (response.Items.Count > 0) {
-				dic["nextPageToken"] = response.NextPageToken;
-				List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
-				foreach (var item in response.Items) {
-					list.Add(new Dictionary<string, object> {
-						{Consts.Channel.Name, item.Snippet.Title },
-						{Consts.Channel.ID, item.Snippet.ResourceId.ChannelId},
-						{Consts.Channel.Description, item.Snippet.Description },
-						{Consts.Channel.Thumbnail, item.Snippet.Thumbnails.Default__.Url }
-					});
+					list.Add(channel);
 				}
+				nextPageToken = res.NextPageToken;
+			} while (!string.IsNullOrEmpty(nextPageToken));
 
-				dic["itemList"] = list;
-			}
+			list.Sort((a, b) => DateTime.Compare(b.PublishedAt, a.PublishedAt));
 
-			return dic;
+			return list;
 		}
 
-		public List<Dictionary<string, object>> GetSubscriptionsList() {
-			var list = new List<Dictionary<string, object>>();
+		public List<Channel> GetSubscriptions(IProgress<int> progress) {
+			var list = new List<Channel>();
 
-			var dic = GetSubscriptions("");
-			if (dic.Keys.Count > 0) {
-				list.AddRange((List<Dictionary<string, object>>)dic["itemList"]);
+			string nextPageToken = null;
+			do {
+				var res = base.GetSubscriptions(nextPageToken);
+				int channelCount = res.PageInfo.TotalResults ?? 0;
 
-				while (!string.IsNullOrEmpty((string)dic["nextPageToken"])) {
-					dic = GetSubscriptions((string)dic["nextPageToken"]);
+				foreach (var item in res.Items) {
+					var channel = new Channel() {
+						ID = item.Snippet.ResourceId.ChannelId,
+						Name = item.Snippet.Title,
+						Description = item.Snippet.Description,
+						PublishedAt = item.Snippet.PublishedAt ?? new DateTime()
+					};
+					channel.Thumbnail.Url = item.Snippet.Thumbnails.Default__.Url;
 
-					if (dic.Keys.Count > 0) {
-						list.AddRange((List<Dictionary<string, object>>)dic["itemList"]);
-					}
+					list.Add(channel);
+
+					progress.Report(list.Count / channelCount);
 				}
-			}
+				nextPageToken = res.NextPageToken;
+			} while (!string.IsNullOrEmpty(nextPageToken));
 
+			list.Sort((a, b) => DateTime.Compare(b.PublishedAt, a.PublishedAt));
+
+			progress.Report(100);
 			return list;
 		}
 	}

@@ -1,12 +1,10 @@
-﻿using LiveTubeReport.Properties;
+﻿using LiveTubeReport.Api.Util;
+using LiveTubeReport.Entity;
+using LiveTubeReport.Properties;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace LiveTubeReport {
@@ -16,12 +14,14 @@ namespace LiveTubeReport {
 
 		private Timer timer;
 		private DataTable table;
-		private YouTubeDataProvider provider;
+		//private YouTubeDataProvider provider;
+		private YouTubeDataProvider adaptor;
 
 		public event EventHandler<LiveEventArgs> LiveStartEvent;
 		public event EventHandler<LiveEventArgs> LiveEndEvent;
 
 		public Monitor(DataTable table) {
+
 			//タイマー
 			timer = new Timer();
 			timer.Elapsed += new ElapsedEventHandler(CheckLiveStatus);
@@ -31,7 +31,7 @@ namespace LiveTubeReport {
 			this.table = table;
 
 			//YouTubeApi
-			provider = new YouTubeDataProvider(settings.ApiKey);
+			adaptor = new YouTubeDataProvider(settings.api_key);
 		}
 
 		private void CheckLiveStatus(object sender, ElapsedEventArgs e) {
@@ -40,41 +40,41 @@ namespace LiveTubeReport {
 
 		public void CheckLiveStatus() {
 			foreach (DataRow row in table.Rows) {
-				string channelName = (string)row["ChannelName"];
+				string channelName = (string)row[Consts.Channel.Name];
 				logger.Info("チャンネル " + channelName + " のライブ情報を取得します...");
 
-				string channelID = (string)row["ChannelID"];
-				var dic = provider.GetLiveInfoData(channelID);
+				string channelID = (string)row[Consts.Channel.ID];
+				var live = adaptor.GetLiveInfoData(channelID);
 
-				var status = dic[Consts.Live.Status];
-				bool statusBefore = (bool)row["LiveStatus"];
-				row["LiveStatus"] = status;
+				var status = live.Status;
+				bool statusBefore = status;
+				row[Consts.Live.Status] = status;
+				row[Consts.Channel.LastRequestTime] = DateTime.Now;
+				row[Consts.Channel.NextRequestTime] = DateTime.Now.AddMilliseconds(timer.Interval);
 
 				if (!statusBefore && (bool)status) {
-					row["LiveDescription"] = dic[Consts.Live.Description];
-					row["LiveLastRequestTime"] = DateTime.Now;
-					row["LiveNextRequestTime"] = DateTime.Now.AddMilliseconds(timer.Interval);
-					row["LiveID"] = dic[Consts.Live.ID];
-					row["LiveTitle"] = dic[Consts.Live.Title];
-					row["LiveUrl"] = dic[Consts.Live.Url];
-					row["LiveStartTime"] = DateTime.Now;
+					row[Consts.Live.ID] = live.ID;
+					row[Consts.Live.Description] = live.Description;
+					row[Consts.Live.Title] = live.Title;
+					row[Consts.Live.Url] = live.Url;
+					row[Consts.Live.StartTime] = DateTime.Now;
 
 					LiveEventArgs args = new LiveEventArgs();
-					args.Channel.Name = (string)row["ChannelName"];
-					args.Channel.Thumbnail = (Bitmap)row["Thumbnail"];
-					args.Channel.Live.Title = (string)row["LiveTitle"];
-					args.Channel.Live.URL = "https://www.youtube.com/watch?v=" + (string)dic[Consts.Live.ID];
-					args.Channel.Live.StartTime = (DateTime)row["LiveStartTime"];
-					args.Channel.Live.Description = (string)row["LiveDescription"];
+					args.Channel.ID = (string)row[Consts.Channel.ID];
+					args.Channel.Name = (string)row[Consts.Channel.Name];
+					args.Channel.Thumbnail.Image = (Bitmap)row[Consts.Channel.Thumbnail.Image];
+					args.Channel.Live.Title = (string)row[Consts.Live.Title];
+					args.Channel.Live.Url = (string)row[Consts.Live.Url];
+					args.Channel.Live.StartTime = (DateTime)row[Consts.Live.StartTime];
+					args.Channel.Live.Description = (string)row[Consts.Live.Description];
 
-					onLiveStart(row, args);
+					OnLiveStart(row, args);
 				}
 				else if (statusBefore && !(bool)status) {
-					row["LiveEndTime"] = DateTime.Now;
+					row[Consts.Live.EndTime] = DateTime.Now;
 
 					LiveEventArgs args = new LiveEventArgs();
-					args.channelID = channelID;
-					onLiveEnd(row, args);
+					OnLiveEnd(row, args);
 				}
 			}
 		}
@@ -87,24 +87,16 @@ namespace LiveTubeReport {
 			timer.Stop();
 		}
 
-		protected virtual void onLiveStart(DataRow row, LiveEventArgs e) {
-			EventHandler<LiveEventArgs> handler = LiveStartEvent;
-			if (handler != null) {
-				handler(row, e);
-			}
+		protected virtual void OnLiveStart(DataRow row, LiveEventArgs e) {
+			LiveStartEvent?.Invoke(row, e);
 		}
 
-		protected virtual void onLiveEnd(DataRow row, LiveEventArgs e) {
-			EventHandler<LiveEventArgs> handler = LiveEndEvent;
-			if (handler != null) {
-				handler(row, e);
-			}
+		protected virtual void OnLiveEnd(DataRow row, LiveEventArgs e) {
+			LiveEndEvent?.Invoke(row, e);
 		}
 	}
 
 	public class LiveEventArgs : EventArgs {
-		public string channelID { get; set; }
-		public DataRow DataRow { get; set; }
 		public Channel Channel { get; set; }
 
 		public LiveEventArgs() {

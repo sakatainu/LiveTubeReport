@@ -26,24 +26,24 @@ namespace LiveTubeReport.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA")]
-        public string ApiKey {
+        public string api_key {
             get {
-                return ((string)(this["ApiKey"]));
+                return ((string)(this["api_key"]));
             }
             set {
-                this["ApiKey"] = value;
+                this["api_key"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int ChannelLimit {
+        public int channel_limit {
             get {
-                return ((int)(this["ChannelLimit"]));
+                return ((int)(this["channel_limit"]));
             }
             set {
-                this["ChannelLimit"] = value;
+                this["channel_limit"] = value;
             }
         }
         
