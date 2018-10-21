@@ -1,39 +1,34 @@
-﻿using NLog;
+﻿using LiveTubeReport.Entity;
+using NLog;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Timers;
-using System.Media;
-using System.IO;
 using System.Diagnostics;
-using LiveTubeReport.Entity;
+using System.Threading;
+using System.Windows.Forms;
 
-namespace LiveTubeReport {
-	public partial class NotificationForm : Form {
+namespace LiveTubeReport.View {
+	public partial class PopupForm : Form {
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
 
-		public decimal CloseTime { get; set; } = 5;
-		public SoundPlayer player;
+		private readonly static Option option = OptionForm.Option;
 
 		private Channel Channel;
 
-		public NotificationForm() {
+		public PopupForm() {
 			InitializeComponent();
-
-			// windows 10 用のデフォルト通知音
-			var path = @"C:\Windows\media\Windows Notify System Generic.wav";
-			if (File.Exists(path)) {
-				player = new SoundPlayer(path);
-			}
 		}
 
-		public NotificationForm(Channel channel) : this(){
+		// TODO 複数表示時に位置をずらせるようにする
+		private void SetupLocation() {
+			var screanHeight = Screen.GetWorkingArea(this).Height;
+			var screanWidth = Screen.GetWorkingArea(this).Width;
+
+			var formHeight = this.Size.Height;
+			var formWidth = this.Size.Width;
+			// デスクトップ右上
+			this.SetDesktopLocation(screanWidth - formWidth, 0);
+		}
+
+		public PopupForm(Channel channel) : this() {
 			this.Channel = channel;
 
 			this.Text = channel.Live.StartTime.ToString("F");
@@ -43,15 +38,13 @@ namespace LiveTubeReport {
 			lblLiveDescription.Text = channel.Live.Description;
 			tpLiveDescription.SetToolTip(lblLiveDescription, channel.Live.Description);
 		}
-		
-		private void NotificationForm_Load(object sender, EventArgs e) {
-			if (player != null) {
-				player.Play();
-			} else {
-				System.Media.SystemSounds.Asterisk.Play();
-			}
 
-			var timer = new System.Timers.Timer((double)CloseTime * 1000) {
+		private void NotificationForm_Load(object sender, EventArgs e) {
+			SetupLocation();
+
+			option.Notice.Sound.Play();
+
+			var timer = new System.Timers.Timer(option.Notice.PopUp.ShowSec * 1000) {
 				SynchronizingObject = this
 			};
 			timer.Elapsed += (se, ev) => {
@@ -65,10 +58,11 @@ namespace LiveTubeReport {
 			timer.Start();
 		}
 
+		// フェードアウト
 		private void FadeOut() {
 			for (int i = 15; i >= 0; i--) {
 				this.Opacity = 1.0 / 15 * i;
-				System.Threading.Thread.Sleep(50);
+				Thread.Sleep(50);
 			}
 		}
 

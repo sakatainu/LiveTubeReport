@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="ChannelManager" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>LiveTubeReport.ChannelManager, LiveTubeReport, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="AppNotice" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>LiveTubeReport.AppNotice, LiveTubeReport, Version=2.0.1807.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

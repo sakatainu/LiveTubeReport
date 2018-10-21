@@ -81,7 +81,7 @@ namespace LiveTubeReport.Api.Core{
 			request.Mine = true;
 			request.MaxResults = 50;
 			request.PageToken = nextPageToken ?? ""; //null合体演算子
-			request.Fields = "nextPageToken, items(snippet(title,publishedAt, resourceId/channelId, description, thumbnails/default/url))";
+			request.Fields = "pageInfo, nextPageToken, items(snippet(title,publishedAt, resourceId/channelId, description, thumbnails/default/url))";
 			//request.Fields = "nextPageToken, items(snippet/title, snippet/resourceId/channelId, snippet/description, snippet/thumbnails/default/url)";
 
 			return request.Execute();

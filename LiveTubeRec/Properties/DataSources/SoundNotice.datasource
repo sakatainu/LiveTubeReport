@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="OptionForm" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>LiveTubeReport.OptionForm, LiveTubeReport, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="SoundNotice" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>LiveTubeReport.SoundNotice, LiveTubeReport, Version=2.0.1807.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

@@ -10,28 +10,26 @@ using System.Timers;
 namespace LiveTubeReport {
 	public class Monitor {
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
-		private static Settings settings = Properties.Settings.Default;
 
 		private Timer timer;
 		private DataTable table;
-		//private YouTubeDataProvider provider;
-		private YouTubeDataProvider adaptor;
+		private YouTubeDataProvider provider;
 
 		public event EventHandler<LiveEventArgs> LiveStartEvent;
 		public event EventHandler<LiveEventArgs> LiveEndEvent;
 
 		public Monitor(DataTable table) {
-
 			//タイマー
 			timer = new Timer();
 			timer.Elapsed += new ElapsedEventHandler(CheckLiveStatus);
-			timer.Interval = settings.Interval * 60000; //msec
+			// ひとまず設定値*1分 
+			//timer.Interval = Settings.Default.check_interval_min * 60000;
 
 			//チャンネルテーブル
 			this.table = table;
 
 			//YouTubeApi
-			adaptor = new YouTubeDataProvider(settings.api_key);
+			//provider = new YouTubeDataProvider(Settings.Default.api_key);
 		}
 
 		private void CheckLiveStatus(object sender, ElapsedEventArgs e) {
@@ -44,10 +42,10 @@ namespace LiveTubeReport {
 				logger.Info("チャンネル " + channelName + " のライブ情報を取得します...");
 
 				string channelID = (string)row[Consts.Channel.ID];
-				var live = adaptor.GetLiveInfoData(channelID);
+				var live = provider.GetLiveInfoData(channelID);
 
 				var status = live.Status;
-				bool statusBefore = status;
+				bool statusBefore = (bool)row[Consts.Live.Status];
 				row[Consts.Live.Status] = status;
 				row[Consts.Channel.LastRequestTime] = DateTime.Now;
 				row[Consts.Channel.NextRequestTime] = DateTime.Now.AddMilliseconds(timer.Interval);

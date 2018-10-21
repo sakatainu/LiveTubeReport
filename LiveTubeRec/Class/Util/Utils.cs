@@ -9,6 +9,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace LiveTubeReport
 {
@@ -79,6 +80,34 @@ namespace LiveTubeReport
 				bmp.Save(thumbnail.Path, System.Drawing.Imaging.ImageFormat.Png);
 			}
 		}
+
+		/// <summary>
+		/// XMLのシリアライズを行う
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="savePath"></param>
+		/// <param name="graph"></param>
+		public static void XmlSerialize<T>(string savePath, T graph) {
+			using (var sw = new StreamWriter(savePath, false, Encoding.UTF8)) {
+				var ns = new XmlSerializerNamespaces();
+				ns.Add(string.Empty, string.Empty);
+
+				new XmlSerializer(typeof(T)).Serialize(sw, graph, ns);
+			}
+		}
+
+		/// <summary>
+		/// XMLのデシリアライズを行う
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="loadPath"></param>
+		/// <returns></returns>
+		public static T XmlDeserialize<T>(string loadPath) {
+			using (var sr = new StreamReader(loadPath)) {
+				return (T)new XmlSerializer(typeof(T)).Deserialize(sr);
+			}
+		}
+
 		/*
 		public static Channel ToChannel(DataRow row) {
 

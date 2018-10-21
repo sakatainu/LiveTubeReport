@@ -109,7 +109,8 @@ namespace LiveTubeReport.Api.Util {
 
 					list.Add(channel);
 
-					progress.Report(list.Count / channelCount);
+					int prog = (int)((double)list.Count / (double)channelCount * (double)100);
+					progress.Report(prog);
 				}
 				nextPageToken = res.NextPageToken;
 			} while (!string.IsNullOrEmpty(nextPageToken));

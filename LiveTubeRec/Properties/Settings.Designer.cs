@@ -25,37 +25,73 @@ namespace LiveTubeReport.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA")]
-        public string api_key {
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 17")]
+        public global::System.Drawing.Point form_location {
             get {
-                return ((string)(this["api_key"]));
+                return ((global::System.Drawing.Point)(this["form_location"]));
             }
             set {
-                this["api_key"] = value;
+                this["form_location"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int channel_limit {
+        [global::System.Configuration.DefaultSettingValueAttribute("917, 518")]
+        public global::System.Drawing.Size form_size {
             get {
-                return ((int)(this["channel_limit"]));
+                return ((global::System.Drawing.Size)(this["form_size"]));
             }
             set {
-                this["channel_limit"] = value;
+                this["form_size"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int Interval {
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\data\\")]
+        public string data_path {
             get {
-                return ((int)(this["Interval"]));
+                return ((string)(this["data_path"]));
             }
             set {
-                this["Interval"] = value;
+                this["data_path"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("data.xml")]
+        public string data_file_name {
+            get {
+                return ((string)(this["data_file_name"]));
+            }
+            set {
+                this["data_file_name"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("option.xml")]
+        public string option_file_name {
+            get {
+                return ((string)(this["option_file_name"]));
+            }
+            set {
+                this["option_file_name"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("image\\")]
+        public string image_path {
+            get {
+                return ((string)(this["image_path"]));
+            }
+            set {
+                this["image_path"] = value;
             }
         }
     }

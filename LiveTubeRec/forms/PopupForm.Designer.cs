@@ -1,5 +1,5 @@
-﻿namespace LiveTubeReport {
-	partial class NotificationForm {
+﻿namespace LiveTubeReport.View {
+	partial class PopupForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options>
+    <general>
+            <api_key>AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA</api_key>
+    </general>
+    <notice>
+		<popup>
+			<popup_screen>-1</popup_screen>
+			<popup_pos>2</popup_pos>
+			<width>300</width>
+			<show_sec>3</show_sec>
+		</popup>
+		<balloon>
+			<show_sec>10</show_sec>
+		</balloon>
+		<sound>
+			<default_sound>True</default_sound>
+			<default_sound_alias>MailBeep</default_sound_alias>
+			<file_path></file_path>
+		</sound>
+		<web>
+			<default_browser>True</default_browser>
+			<file_path></file_path>
+			<command>{url}</command>
+		</web>
+        <app>
+            <item no="1">
+                <file_path></file_path>
+                <command>{live_url}</command>
+                <name>namarokuRecorder.exe</name>
+            </item>
+            <item no="2">
+                <file_path></file_path>
+                <command>{live_url}</command>
+                <name>アプリケーション２</name>
+            </item>
+        </app>
+    </notice>
+</options>

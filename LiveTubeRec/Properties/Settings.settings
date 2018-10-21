@@ -2,14 +2,23 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LiveTubeReport.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="api_key" Type="System.String" Scope="User">
-      <Value Profile="(Default)">AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA</Value>
+    <Setting Name="form_location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 17</Value>
     </Setting>
-    <Setting Name="channel_limit" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">20</Value>
+    <Setting Name="form_size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">917, 518</Value>
     </Setting>
-    <Setting Name="Interval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
+    <Setting Name="data_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\data\</Value>
+    </Setting>
+    <Setting Name="data_file_name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">data.xml</Value>
+    </Setting>
+    <Setting Name="option_file_name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">option.xml</Value>
+    </Setting>
+    <Setting Name="image_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">image\</Value>
     </Setting>
   </Settings>
 </SettingsFile>
