@@ -42,8 +42,6 @@ namespace LiveTubeReport.View {
 		private void NotificationForm_Load(object sender, EventArgs e) {
 			SetupLocation();
 
-			option.Notice.Sound.Play();
-
 			var timer = new System.Timers.Timer(option.Notice.PopUp.ShowSec * 1000) {
 				SynchronizingObject = this
 			};

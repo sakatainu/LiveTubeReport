@@ -1,6 +1,7 @@
 ﻿using LiveTubeReport.Api.Util;
 using LiveTubeReport.Entity;
 using LiveTubeReport.Properties;
+using LiveTubeReport.View;
 using NLog;
 using System;
 using System.Data;
@@ -10,6 +11,8 @@ using System.Timers;
 namespace LiveTubeReport {
 	public class Monitor {
 		private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
+
+		private static Option option = OptionForm.Option;
 
 		private Timer timer;
 		private DataTable table;
@@ -23,21 +26,25 @@ namespace LiveTubeReport {
 			timer = new Timer();
 			timer.Elapsed += new ElapsedEventHandler(CheckLiveStatus);
 			// ひとまず設定値*1分 
-			//timer.Interval = Settings.Default.check_interval_min * 60000;
+			timer.Interval = option.General.CheckInterval * 60000;
 
 			//チャンネルテーブル
 			this.table = table;
 
 			//YouTubeApi
-			//provider = new YouTubeDataProvider(Settings.Default.api_key);
+			provider = new YouTubeDataProvider(option.General.ApiKey);
 		}
 
 		private void CheckLiveStatus(object sender, ElapsedEventArgs e) {
 			CheckLiveStatus();
 		}
 
+		private bool keepOn;
 		public void CheckLiveStatus() {
+			keepOn = true;
 			foreach (DataRow row in table.Rows) {
+				if (!keepOn) break;
+
 				string channelName = (string)row[Consts.Channel.Name];
 				logger.Info("チャンネル " + channelName + " のライブ情報を取得します...");
 
@@ -61,6 +68,7 @@ namespace LiveTubeReport {
 					args.Channel.ID = (string)row[Consts.Channel.ID];
 					args.Channel.Name = (string)row[Consts.Channel.Name];
 					args.Channel.Thumbnail.Image = (Bitmap)row[Consts.Channel.Thumbnail.Image];
+					args.Channel.Live.ID = (string)row[Consts.Channel.ID];
 					args.Channel.Live.Title = (string)row[Consts.Live.Title];
 					args.Channel.Live.Url = (string)row[Consts.Live.Url];
 					args.Channel.Live.StartTime = (DateTime)row[Consts.Live.StartTime];
@@ -82,6 +90,7 @@ namespace LiveTubeReport {
 		}
 
 		public void Stop() {
+			keepOn = false;
 			timer.Stop();
 		}
 

@@ -71,11 +71,16 @@
 			this.btnOk = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.checkBox2 = new System.Windows.Forms.CheckBox();
 			this.SoundNoticeBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.AppItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.AppItemPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.AppItemArgument = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.AppItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.WebNoticeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.AppNoticeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.PopupNoticeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.GeneralBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -92,6 +97,10 @@
 			this.WebGroupBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SoundNoticeBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.AppItemBindingSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.WebNoticeBindingSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.AppNoticeBindingSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PopupNoticeBindingSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.GeneralBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -136,6 +145,7 @@
 			// 
 			this.ApiKeyTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.ApiKeyTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.GeneralBindingSource, "ApiKey", true));
 			this.ApiKeyTextBox.Enabled = false;
 			this.ApiKeyTextBox.Location = new System.Drawing.Point(55, 18);
 			this.ApiKeyTextBox.Name = "ApiKeyTextBox";
@@ -413,6 +423,7 @@
 			// 
 			// PopUpWidthNumericUpDown
 			// 
+			this.PopUpWidthNumericUpDown.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.PopupNoticeBindingSource, "Width", true));
 			this.PopUpWidthNumericUpDown.Increment = new decimal(new int[] {
             10,
             0,
@@ -441,6 +452,7 @@
 			// 
 			// PopUpShowTimeNumericUpDown
 			// 
+			this.PopUpShowTimeNumericUpDown.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.PopupNoticeBindingSource, "ShowSec", true));
 			this.PopUpShowTimeNumericUpDown.DecimalPlaces = 1;
 			this.PopUpShowTimeNumericUpDown.Increment = new decimal(new int[] {
             5,
@@ -630,6 +642,7 @@
 			this.WebGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.WebGroupBox.Controls.Add(this.checkBox1);
+			this.WebGroupBox.Controls.Add(this.checkBox2);
 			this.WebGroupBox.Controls.Add(this.WebCheckBox);
 			this.WebGroupBox.Location = new System.Drawing.Point(6, 6);
 			this.WebGroupBox.Name = "WebGroupBox";
@@ -641,7 +654,8 @@
 			// checkBox1
 			// 
 			this.checkBox1.AutoSize = true;
-			this.checkBox1.Location = new System.Drawing.Point(109, 20);
+			this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.PopupNoticeBindingSource, "Enable", true));
+			this.checkBox1.Location = new System.Drawing.Point(185, 20);
 			this.checkBox1.Margin = new System.Windows.Forms.Padding(10, 5, 5, 10);
 			this.checkBox1.Name = "checkBox1";
 			this.checkBox1.Size = new System.Drawing.Size(75, 16);
@@ -652,7 +666,8 @@
 			// WebCheckBox
 			// 
 			this.WebCheckBox.AutoSize = true;
-			this.WebCheckBox.Location = new System.Drawing.Point(13, 20);
+			this.WebCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.WebNoticeBindingSource, "Enable", true));
+			this.WebCheckBox.Location = new System.Drawing.Point(89, 20);
 			this.WebCheckBox.Margin = new System.Windows.Forms.Padding(10, 5, 5, 10);
 			this.WebCheckBox.Name = "WebCheckBox";
 			this.WebCheckBox.Size = new System.Drawing.Size(81, 16);
@@ -687,6 +702,18 @@
 			// 
 			this.OpenFileDialog.Title = "実行するソフトを選択してください";
 			// 
+			// checkBox2
+			// 
+			this.checkBox2.AutoSize = true;
+			this.checkBox2.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.SoundNoticeBindingSource, "Enable", true));
+			this.checkBox2.Location = new System.Drawing.Point(13, 20);
+			this.checkBox2.Margin = new System.Windows.Forms.Padding(10, 5, 5, 10);
+			this.checkBox2.Name = "checkBox2";
+			this.checkBox2.Size = new System.Drawing.Size(61, 16);
+			this.checkBox2.TabIndex = 0;
+			this.checkBox2.Text = "サウンド";
+			this.checkBox2.UseVisualStyleBackColor = true;
+			// 
 			// SoundNoticeBindingSource
 			// 
 			this.SoundNoticeBindingSource.DataSource = typeof(LiveTubeReport.SoundNotice);
@@ -717,6 +744,22 @@
 			this.AppItemBindingSource.AllowNew = false;
 			this.AppItemBindingSource.DataMember = "AppItems";
 			this.AppItemBindingSource.DataSource = typeof(LiveTubeReport.AppNotice);
+			// 
+			// WebNoticeBindingSource
+			// 
+			this.WebNoticeBindingSource.DataSource = typeof(LiveTubeReport.WebNotice);
+			// 
+			// AppNoticeBindingSource
+			// 
+			this.AppNoticeBindingSource.DataSource = typeof(LiveTubeReport.AppNotice);
+			// 
+			// PopupNoticeBindingSource
+			// 
+			this.PopupNoticeBindingSource.DataSource = typeof(LiveTubeReport.PopupNotice);
+			// 
+			// GeneralBindingSource
+			// 
+			this.GeneralBindingSource.DataSource = typeof(LiveTubeReport.General);
 			// 
 			// OptionForm
 			// 
@@ -750,6 +793,10 @@
 			this.WebGroupBox.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SoundNoticeBindingSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.AppItemBindingSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.WebNoticeBindingSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.AppNoticeBindingSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PopupNoticeBindingSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.GeneralBindingSource)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -808,5 +855,10 @@
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.CheckBox SoundNoticeDefaultCheckBox;
 		private System.Windows.Forms.Button SelectSoundButton;
+		private System.Windows.Forms.CheckBox checkBox2;
+		private System.Windows.Forms.BindingSource AppNoticeBindingSource;
+		private System.Windows.Forms.BindingSource WebNoticeBindingSource;
+		private System.Windows.Forms.BindingSource PopupNoticeBindingSource;
+		private System.Windows.Forms.BindingSource GeneralBindingSource;
 	}
 }

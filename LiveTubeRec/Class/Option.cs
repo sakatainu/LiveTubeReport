@@ -127,6 +127,8 @@ namespace LiveTubeReport {
 		private void RaisePropertyChanged([CallerMemberName]string propertyName = null)
 			=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+		[XmlElement("enable")]
+		public bool Enable { get; set; }
 		[XmlElement("default_sound")]
 		public bool DefaultSound { get; set; }
 		[XmlElement("default_sound_alias")]

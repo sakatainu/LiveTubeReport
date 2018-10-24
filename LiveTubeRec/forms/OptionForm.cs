@@ -20,30 +20,7 @@ namespace LiveTubeReport.View {
 					_option = Utils.XmlDeserialize<Option>(Settings.Default.data_path + Settings.Default.option_file_name);
 				}
 				else {
-					_option = new Option();
-					_option.General.ApiKey = "AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA";
-					_option.General.ChannelMaxCount = 20;
-					_option.General.CheckInterval = 5;
-
-
-					_option.Notice.Sound.DefaultSoundAlias = "Asterisk";
-					var path = @"C:\Windows\media\Windows Notify System Generic.wav";
-					if (File.Exists(path)) {
-						_option.Notice.Sound.DefaultSound = false;
-						_option.Notice.Sound.FilePath = path;
-					} else {
-						_option.Notice.Sound.DefaultSound = true;
-						_option.Notice.Sound.FilePath = "";
-					}
-
-
-					_option.Notice.PopUp.Width = 350;
-					_option.Notice.PopUp.ShowSec = 3;
-
-					_option.Notice.Balloon.ShowSec = 3;
-
-					DirectoryUtils.SafeCreateDirectory(Settings.Default.data_path);
-					Utils.XmlSerialize(Settings.Default.data_path + Settings.Default.option_file_name, _option);
+					_option = initializeOption();
 				}
 
 				return _option;
@@ -53,33 +30,55 @@ namespace LiveTubeReport.View {
 			}
 		}
 
+		private static Option initializeOption() {
+			_option = new Option();
+			_option.General.ApiKey = "AIzaSyAFZC5qhkmYhVjfVErmQmE8jCVfZd4ToSA";
+			_option.General.ChannelMaxCount = 20;
+			_option.General.CheckInterval = 5;
+
+			_option.Notice.Sound.DefaultSoundAlias = "Asterisk";
+			var path = @"C:\Windows\media\Windows Notify System Generic.wav";
+			if (File.Exists(path)) {
+				_option.Notice.Sound.DefaultSound = false;
+				_option.Notice.Sound.FilePath = path;
+			}
+			else {
+				_option.Notice.Sound.DefaultSound = true;
+				_option.Notice.Sound.FilePath = "";
+			}
+
+			_option.Notice.PopUp.Width = 350;
+			_option.Notice.PopUp.ShowSec = 3;
+
+			_option.Notice.Balloon.ShowSec = 3;
+
+			_option.Notice.App.Enable = true;
+			_option.Notice.Balloon.Enable = false;
+			_option.Notice.PopUp.Enable = true;
+			_option.Notice.Sound.Enable = true;
+			_option.Notice.Web.Enable = true;
+
+			DirectoryUtils.SafeCreateDirectory(Settings.Default.data_path);
+			Utils.XmlSerialize(Settings.Default.data_path + Settings.Default.option_file_name, _option);
+
+			return _option;
+		}
+
 		public OptionForm() {
 
 			InitializeComponent();
 
 			// データソースの設定
+			GeneralBindingSource.DataSource = Option.General;
 			AppItemBindingSource.DataSource = Option.Notice.App.AppItems;
+			PopupNoticeBindingSource.DataSource = Option.Notice.PopUp;
 			SoundNoticeBindingSource.DataSource = Option.Notice.Sound;
-
-			// 一般設定
-			ApiKeyTextBox.DataBindings.Add(new Binding("Text", Option.General, "ApiKey"));
-
-			// ポップアップ
-			PopUpShowTimeNumericUpDown.DataBindings.Add("Value", Option.Notice.PopUp, "ShowSec");
-			PopUpWidthNumericUpDown.DataBindings.Add("Value", Option.Notice.PopUp, "Width");
-
-			// バルーン
-			BalloonShowTimeNumericUpDown.DataBindings.Add("Value", Option.Notice.Balloon, "ShowSec");
-
-			//　ブラウザ
-			WebCheckBox.DataBindings.Add("Checked", Option.Notice.Web, "Enable");
+			WebNoticeBindingSource.DataSource = Option.Notice.Web;
 		}
 
 		private void ShowPopupButton_Click(object sender, EventArgs e) {
-			this.Invoke((MethodInvoker)delegate () {
-				PopupForm notificationForm = new PopupForm();
-				notificationForm.Show();
-			});
+			PopupForm notificationForm = new PopupForm();
+			notificationForm.Show();
 		}
 
 		private void ShowBalloonButton_Click(object sender, EventArgs e) {

@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -73,7 +74,7 @@ namespace LiveTubeReport.View {
 			liveTubeDataSet.Clear();
 			DirectoryUtils.SafeCreateDirectory(imagePath);
 
-			if (System.IO.File.Exists(dataPath)) {
+			if (File.Exists(dataPath)) {
 				liveTubeDataSet.ReadXml(dataPath);
 
 				foreach (DataRow row in tbChannel.Rows) {
@@ -88,8 +89,8 @@ namespace LiveTubeReport.View {
 			logger.Debug("初期設定が完了");
 
 			monitor = new Monitor(tbChannel);
-			monitor.LiveStartEvent += DoNotification;
-			monitor.LiveStartEvent += ExecuteApplication;
+			monitor.LiveStartEvent += ActionLiveStartEventHandler;
+			monitor.LiveEndEvent += ActionLiveEndEventHandler;
 			monitor.Start();
 
 			label1.Text = "[ 状態：記録中 ]";
@@ -97,19 +98,44 @@ namespace LiveTubeReport.View {
 			logger.Info("チャンネルの記録を開始しました。");
 		}
 
-		private void DoNotification(object sender, LiveEventArgs e) {
-			Task.Factory.StartNew(() => ShowNotificationForm(e.Channel));
+		private void ActionLiveEndEventHandler(object sender, LiveEventArgs e) {
+			// Do something
 		}
 
-		private void ShowNotificationForm(Channel channel) {
-			this.Invoke((MethodInvoker)delegate () {
-				PopupForm notificationForm = new PopupForm(channel);
-				notificationForm.Show();
-			});
-		}
+		private void ActionLiveStartEventHandler(object sender, LiveEventArgs e) {
+			Channel channel = e.Channel;
 
-		private void ExecuteApplication(object sender, LiveEventArgs e) {
-			
+			if (option.Notice.PopUp.Enable) {
+				Invoke((MethodInvoker) delegate{
+					PopupForm notificationForm = new PopupForm(channel);
+					notificationForm.Show();
+				});
+			}
+
+			if (option.Notice.Web.Enable) {
+				Process.Start(channel.Live.Url);
+			}
+
+			if (option.Notice.Sound.Enable) {
+				option.Notice.Sound.Play();
+			}
+
+			if (option.Notice.App.Enable) {
+				foreach(var item in option.Notice.App.AppItems) {
+					if (!item.Enable) continue;
+					if (string.IsNullOrWhiteSpace(item.FilePath)) continue;
+
+					var arg = item.Argument;
+					arg = arg.Replace("{channel_id}", $"\"{channel.ID}\"");
+					arg = arg.Replace("{channel_name}", $"\"{channel.Name}\"");
+					arg = arg.Replace("{live_id}", $"\"{channel.Live.ID}\"");
+					arg = arg.Replace("{live_title}", $"\"{channel.Live.Title}\"");
+					arg = arg.Replace("{live_url}", $"\"{channel.Live.Url}\"");
+					arg = arg.Replace("{live_start_time}", $"\"{channel.Live.StartTime}\"");
+
+					Process.Start(item.FilePath, arg);
+				}
+			}
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
@@ -212,7 +238,6 @@ namespace LiveTubeReport.View {
 
 		//更新ボタン
 		private async void button2_Click(object sender, EventArgs e) {
-
 			button2.Enabled = false;
 			await Task.Run(() => monitor.CheckLiveStatus());
 			button2.Enabled = true;
@@ -353,6 +378,11 @@ namespace LiveTubeReport.View {
 			var form = new ChannelSelectForm();
 
 			if (form.ShowDialog() == DialogResult.OK) {
+				if (form.Rows.Length <= 0) {
+					return;
+				}
+
+				// TODO 重複チャンネル処理
 				var tmp = form.Rows.CopyToDataTable();
 				tmp.Columns.Add(Consts.Channel.AddDate);
 				foreach (DataRow row in tmp.Rows) {

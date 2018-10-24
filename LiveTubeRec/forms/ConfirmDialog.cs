@@ -13,14 +13,7 @@ namespace LiveTubeReport.View {
 		public ConfirmDialog() {
 			InitializeComponent();
 
-			//描画先とするImageオブジェクトを作成する
-			Bitmap canvas = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-			//ImageオブジェクトのGraphicsオブジェクトを作成する
-			Graphics g = Graphics.FromImage(canvas);
-			g.DrawIcon(SystemIcons.Question, 240, 0);
-			g.Dispose();
-
-			pictureBox1.Image = canvas;
+			pictureBox1.Image = SystemIcons.Question.ToBitmap();
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
