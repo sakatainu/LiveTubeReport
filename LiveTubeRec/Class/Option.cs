@@ -108,7 +108,7 @@ namespace LiveTubeReport {
 		[XmlElement("enable")]
 		public bool Enable { get; set; }
 		[XmlElement("show_sec")]
-		public double ShowSec { get; set; }
+		public int ShowSec { get; set; }
 	}
 
 	public class PopupNotice {

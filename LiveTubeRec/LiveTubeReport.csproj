@@ -128,45 +128,51 @@
   <ItemGroup>
     <Compile Include="class\api\YouTubeDataProvider.cs" />
     <Compile Include="class\Option.cs" />
-    <Compile Include="forms\ChannelSelectForm.cs">
+    <Compile Include="class\view\ChannelSelectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\ChannelSelectForm.Designer.cs">
+    <Compile Include="class\view\ChannelSelectForm.Designer.cs">
       <DependentUpon>ChannelSelectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="class\const\Consts.cs" />
     <Compile Include="class\Monitor.cs" />
     <Compile Include="class\util\DirectoryUtils.cs" />
     <Compile Include="class\entity\Live.cs" />
-    <Compile Include="forms\ConfirmDialog.cs">
+    <Compile Include="class\view\ConfirmDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\ConfirmDialog.Designer.cs">
+    <Compile Include="class\view\ConfirmDialog.Designer.cs">
       <DependentUpon>ConfirmDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="forms\MainForm.cs">
+    <Compile Include="class\view\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\MainForm.Designer.cs">
+    <Compile Include="class\view\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="class\util\IniFile.cs" />
-    <Compile Include="forms\PopupForm.cs">
+    <Compile Include="class\view\MainForm.Events.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\PopupForm.Designer.cs">
+    <Compile Include="class\view\MainForm.Initialize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="class\view\PopupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="class\view\PopupForm.Designer.cs">
       <DependentUpon>PopupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="forms\OptionForm.cs">
+    <Compile Include="class\view\OptionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\OptionForm.Designer.cs">
+    <Compile Include="class\view\OptionForm.Designer.cs">
       <DependentUpon>OptionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="forms\VersionInfo.cs">
+    <Compile Include="class\view\VersionInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\VersionInfo.Designer.cs">
+    <Compile Include="class\view\VersionInfo.Designer.cs">
       <DependentUpon>VersionInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -181,23 +187,23 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <EmbeddedResource Include="forms\ChannelSelectForm.resx">
+    <EmbeddedResource Include="class\view\ChannelSelectForm.resx">
       <DependentUpon>ChannelSelectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\ConfirmDialog.resx">
+    <EmbeddedResource Include="class\view\ConfirmDialog.resx">
       <DependentUpon>ConfirmDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\MainForm.resx">
+    <EmbeddedResource Include="class\view\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\PopupForm.resx">
+    <EmbeddedResource Include="class\view\PopupForm.resx">
       <DependentUpon>PopupForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\OptionForm.resx">
+    <EmbeddedResource Include="class\view\OptionForm.resx">
       <DependentUpon>OptionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\VersionInfo.resx">
+    <EmbeddedResource Include="class\view\VersionInfo.resx">
       <DependentUpon>VersionInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -211,9 +217,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="icons\Main.ico" />
-    <EmbeddedResource Include="client_secrets.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="client_secrets.json" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -233,7 +237,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="shell\PrevBuild.ps1" />
-    <None Include="youtube-dl\youtube-dl.bat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -246,12 +249,6 @@
     </Content>
     <Content Include="dll\Newtonsoft.Json.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="youtube-dl\ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="youtube-dl\youtube-dl.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="icons\play-button.png" />
     <EmbeddedResource Include="icons\repeat.png" />

@@ -1,23 +1,19 @@
 ﻿using Google.Apis.Http;
-using Google.Apis.YouTube.v3;
 using LiveTubeReport.Api.Core;
 using LiveTubeReport.Entity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveTubeReport.Api.Util {
-	//YouTubeAPIでデータを取得し、LiveDataで返却するクラス
 	public class YouTubeDataProvider : YouTubeDataApiGateway {
 		public YouTubeDataProvider(string apiKey) : base(apiKey) { }
 		public YouTubeDataProvider(IConfigurableHttpClientInitializer credential) : base(credential) { }
-
+		
 		/// <summary>
-		///チャンネルから生放送の情報を取得します
-		///keylist liveID, liveTitle, liveUrl
+		/// ライブ情報を取得する
 		/// </summary>
+		/// <param name="channelID"></param>
+		/// <returns></returns>
 		public new Live GetLiveInfoData(string channelID) {
 			var response = base.GetLiveInfoData(channelID);
 			if (response.Items.Count <= 0) {
@@ -37,9 +33,11 @@ namespace LiveTubeReport.Api.Util {
 			return live;
 		}
 
-
-		//チャンネルIDからチャンネルの情報を取得します
-		//keylist channelName, thumbnail
+		/// <summary>
+		/// チャンネル情報を取得する
+		/// </summary>
+		/// <param name="channelID"></param>
+		/// <returns></returns>
 		public new Channel GetChannelData(string channelID) {
 			var res = base.GetChannelData(channelID);
 
@@ -53,16 +51,14 @@ namespace LiveTubeReport.Api.Util {
 				ID = item.Id.ChannelId,
 				Name = item.Snippet.Title,
 				Description = item.Snippet.Description,
-				Thumbnail = new Thumbnail {
-					Url = item.Snippet.Thumbnails.Default__.Url
-				}
 			};
+			channel.Thumbnail.Url = item.Snippet.Thumbnails.Default__.Url;
 
 			return channel;
 		}
 
 		/// <summary>
-		/// ユーザーの登録チャンネルを取得します。
+		/// ユーザーの登録チャンネルを取得する
 		/// </summary>
 		/// <returns></returns>
 		public List<Channel> GetSubscriptions() {
@@ -90,6 +86,11 @@ namespace LiveTubeReport.Api.Util {
 			return list;
 		}
 
+		/// <summary>
+		/// ユーザの登録チャンネルを取得する
+		/// </summary>
+		/// <param name="progress"></param>
+		/// <returns></returns>
 		public List<Channel> GetSubscriptions(IProgress<int> progress) {
 			var list = new List<Channel>();
 

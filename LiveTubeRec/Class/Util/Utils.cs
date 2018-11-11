@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,6 +109,24 @@ namespace LiveTubeReport
 			}
 		}
 
+		public static List<T> ConvertToList<T>(DataTable dt) {
+			var columns = dt.Columns.Cast<DataColumn>()
+			.Select(c => c.ColumnName)
+			.ToList();
+
+			var properties = typeof(T).GetProperties();
+
+			return dt.AsEnumerable().Select(row => GetT<T>(row, columns, properties)).ToList();
+		}
+
+		public static T GetT<T>(DataRow dr, List<string> ColumnNames, PropertyInfo[] properties) {
+			var ResT = Activator.CreateInstance<T>();
+			foreach (var pro in properties) {
+				if (ColumnNames.Contains(pro.Name))
+					pro.SetValue(ResT, dr[pro.Name]);
+			}
+			return ResT;
+		}
 		/*
 		public static Channel ToChannel(DataRow row) {
 
