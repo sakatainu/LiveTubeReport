@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveTubeReport", "LiveTubeRec\LiveTubeReport.csproj", "{14659AB2-8AFB-46E8-B5D2-9AAE9247E580}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VtuberScheduleGetter", "VtuberScheduleGetter\VtuberScheduleGetter.csproj", "{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,22 @@ Global
 		{14659AB2-8AFB-46E8-B5D2-9AAE9247E580}.Release|x64.Build.0 = Release|Any CPU
 		{14659AB2-8AFB-46E8-B5D2-9AAE9247E580}.Release|x86.ActiveCfg = Release|Any CPU
 		{14659AB2-8AFB-46E8-B5D2-9AAE9247E580}.Release|x86.Build.0 = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|ARM.Build.0 = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|x64.Build.0 = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3C57CB8-5EC5-4A90-8480-C727ACC24F84}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.LogTextBox = new System.Windows.Forms.TextBox();
 			this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -105,6 +105,7 @@
 			this.dataColumn1 = new System.Data.DataColumn();
 			this.dataColumn2 = new System.Data.DataColumn();
 			this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+			this.ScheduleDGV = new System.Windows.Forms.DataGridView();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
 			this.contextMenuStrip.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.liveTubeDataSet)).BeginInit();
@@ -115,9 +116,11 @@
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ExternalAppsDataSet)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.ScheduleDGV)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// LogTextBox
@@ -138,8 +141,8 @@
 			this.dataGridView.AllowUserToAddRows = false;
 			this.dataGridView.AllowUserToOrderColumns = true;
 			this.dataGridView.AllowUserToResizeRows = false;
-			dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-			this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+			this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
 			this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -210,8 +213,8 @@
 			// dgvStatus
 			// 
 			this.dgvStatus.DataPropertyName = "LiveStatus";
-			dataGridViewCellStyle8.NullValue = null;
-			this.dgvStatus.DefaultCellStyle = dataGridViewCellStyle8;
+			dataGridViewCellStyle2.NullValue = null;
+			this.dgvStatus.DefaultCellStyle = dataGridViewCellStyle2;
 			this.dgvStatus.HeaderText = "状況";
 			this.dgvStatus.Name = "dgvStatus";
 			this.dgvStatus.ReadOnly = true;
@@ -244,9 +247,9 @@
 			// dgvLiveStartTime
 			// 
 			this.dgvLiveStartTime.DataPropertyName = "LiveStartTime";
-			dataGridViewCellStyle9.Format = "G";
-			dataGridViewCellStyle9.NullValue = null;
-			this.dgvLiveStartTime.DefaultCellStyle = dataGridViewCellStyle9;
+			dataGridViewCellStyle3.Format = "G";
+			dataGridViewCellStyle3.NullValue = null;
+			this.dgvLiveStartTime.DefaultCellStyle = dataGridViewCellStyle3;
 			this.dgvLiveStartTime.HeaderText = "放送開始";
 			this.dgvLiveStartTime.Name = "dgvLiveStartTime";
 			this.dgvLiveStartTime.ReadOnly = true;
@@ -255,9 +258,9 @@
 			// dgvLiveEndTime
 			// 
 			this.dgvLiveEndTime.DataPropertyName = "LiveEndTime";
-			dataGridViewCellStyle10.Format = "G";
-			dataGridViewCellStyle10.NullValue = null;
-			this.dgvLiveEndTime.DefaultCellStyle = dataGridViewCellStyle10;
+			dataGridViewCellStyle4.Format = "G";
+			dataGridViewCellStyle4.NullValue = null;
+			this.dgvLiveEndTime.DefaultCellStyle = dataGridViewCellStyle4;
 			this.dgvLiveEndTime.HeaderText = "放送終了";
 			this.dgvLiveEndTime.Name = "dgvLiveEndTime";
 			this.dgvLiveEndTime.ReadOnly = true;
@@ -266,9 +269,9 @@
 			// dgvLastRequestDate
 			// 
 			this.dgvLastRequestDate.DataPropertyName = "LastRequestTime";
-			dataGridViewCellStyle11.Format = "G";
-			dataGridViewCellStyle11.NullValue = null;
-			this.dgvLastRequestDate.DefaultCellStyle = dataGridViewCellStyle11;
+			dataGridViewCellStyle5.Format = "G";
+			dataGridViewCellStyle5.NullValue = null;
+			this.dgvLastRequestDate.DefaultCellStyle = dataGridViewCellStyle5;
 			this.dgvLastRequestDate.HeaderText = "最終リクエスト";
 			this.dgvLastRequestDate.Name = "dgvLastRequestDate";
 			this.dgvLastRequestDate.ReadOnly = true;
@@ -277,8 +280,8 @@
 			// dgvAddDate
 			// 
 			this.dgvAddDate.DataPropertyName = "AddDate";
-			dataGridViewCellStyle12.Format = "G";
-			this.dgvAddDate.DefaultCellStyle = dataGridViewCellStyle12;
+			dataGridViewCellStyle6.Format = "G";
+			this.dgvAddDate.DefaultCellStyle = dataGridViewCellStyle6;
 			this.dgvAddDate.HeaderText = "追加日";
 			this.dgvAddDate.Name = "dgvAddDate";
 			this.dgvAddDate.ReadOnly = true;
@@ -534,19 +537,19 @@
 			// OpenCurrentFolderToolStripMenuItem
 			// 
 			this.OpenCurrentFolderToolStripMenuItem.Name = "OpenCurrentFolderToolStripMenuItem";
-			this.OpenCurrentFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.OpenCurrentFolderToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.OpenCurrentFolderToolStripMenuItem.Text = "フォルダを開く(&F)";
 			this.OpenCurrentFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
 			// 
 			// ExitToolStripMenuItem
 			// 
 			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.ExitToolStripMenuItem.Text = "終了(&X)";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
 			// 
@@ -692,6 +695,7 @@
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.ScheduleDGV);
 			this.tabPage3.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
@@ -729,6 +733,18 @@
 			this.bindingSource1.DataMember = "Items";
 			this.bindingSource1.DataSource = this.ExternalAppsDataSet;
 			// 
+			// ScheduleDGV
+			// 
+			this.ScheduleDGV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ScheduleDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.ScheduleDGV.Location = new System.Drawing.Point(3, 3);
+			this.ScheduleDGV.Name = "ScheduleDGV";
+			this.ScheduleDGV.RowTemplate.Height = 21;
+			this.ScheduleDGV.Size = new System.Drawing.Size(903, 379);
+			this.ScheduleDGV.TabIndex = 0;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -760,9 +776,11 @@
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
+			this.tabPage3.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.ExternalAppsDataSet)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.ScheduleDGV)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -839,6 +857,7 @@
 		private System.Data.DataColumn dataColumn2;
 		public System.Data.DataSet ExternalAppsDataSet;
 		public System.Windows.Forms.BindingSource bindingSource1;
+		private System.Windows.Forms.DataGridView ScheduleDGV;
 	}
 }
 

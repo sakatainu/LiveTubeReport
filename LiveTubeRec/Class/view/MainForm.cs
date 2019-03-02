@@ -54,6 +54,8 @@ namespace LiveTubeReport.View {
 			label1.Text = "[ 状態：記録中 ]";
 
 			logger.Info("チャンネルの記録を開始しました。");
+
+			SetSchedule();
 		}
 
 		private void ActionLiveEndEventHandler(object sender, LiveEventArgs e) {
@@ -323,6 +325,18 @@ namespace LiveTubeReport.View {
 
 		private void OpenYouTubeLiveTopToolStripMenuItem_Click(object sender, EventArgs e) {
 			Process.Start("https://www.youtube.com/channel/UC4R8DWoMoI7CAwX8_LjQHig");
+		}
+
+		private void SetSchedule() {
+			var table = new DataTable();
+			table.Columns.Add("liveStartTime");
+			table.Columns.Add("user");
+			table.Columns.Add("liveTitle");
+			Schedule.ReadOnUserLocal().ForEach((dic) => {
+				table.Rows.Add(dic["liveStartTime"], dic["user"], dic["liveTitle"]);
+			});
+
+			ScheduleDGV.DataSource = table;
 		}
 	}
 }
