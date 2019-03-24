@@ -3,6 +3,7 @@ using LiveTubeReport.Entity;
 using LiveTubeReport.Properties;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,331 +13,413 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LiveTubeReport.View {
-	public partial class MainForm : Form {
-		private static Logger logger = LogManager.GetCurrentClassLogger();
+namespace LiveTubeReport.View
+{
+    public partial class MainForm : Form
+    {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly static Option option = OptionForm.Option;
+        private Monitor monitor;
 
-		private readonly static Option option = OptionForm.Option;
+        /// <summary>
+        /// data.xmlまでのパス
+        /// </summary>
+        private readonly string dataPath = Settings.Default.data_path + Settings.Default.data_file_name;
+        private readonly string imagePath = Settings.Default.data_path + Settings.Default.image_path;
 
-		private Monitor monitor;
+        public MainForm()
+        {
+            Initialize();
+        }
 
-		/// <summary>
-		/// data.xmlまでのパス
-		/// </summary>
-		private readonly string dataPath = Settings.Default.data_path + Settings.Default.data_file_name;
-		private readonly string imagePath = Settings.Default.data_path + Settings.Default.image_path;
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            liveTubeDataSet.Clear();
+            DirectoryUtils.SafeCreateDirectory(imagePath);
 
-		public MainForm() {
-			Initialize();
-		}
+            if (File.Exists(dataPath))
+            {
+                liveTubeDataSet.ReadXml(dataPath);
 
-		private void Form1_Load(object sender, EventArgs e) {
-			liveTubeDataSet.Clear();
-			DirectoryUtils.SafeCreateDirectory(imagePath);
+                foreach (DataRow row in tbChannel.Rows)
+                {
+                    row[Consts.Channel.Thumbnail.Image] = new Bitmap((string)row[Consts.Channel.Thumbnail.Path]);
+                }
+                logger.Info("データの読み込みに成功しました。");
+            }
+            else
+            {
+                liveTubeDataSet.WriteXml(dataPath);
+            }
 
-			if (File.Exists(dataPath)) {
-				liveTubeDataSet.ReadXml(dataPath);
+            monitor = new Monitor(tbChannel);
+            monitor.LiveStartEvent += ActionLiveStartEventHandler;
+            monitor.LiveEndEvent += ActionLiveEndEventHandler;
+            monitor.Start();
 
-				foreach (DataRow row in tbChannel.Rows) {
-					row[Consts.Channel.Thumbnail.Image] = new Bitmap((string)row[Consts.Channel.Thumbnail.Path]);
-				}
-				logger.Info("データの読み込みに成功しました。");
-			}
-			else {
-				liveTubeDataSet.WriteXml(dataPath);
-			}
+            label1.Text = "[ 状態：記録中 ]";
 
-			monitor = new Monitor(tbChannel);
-			monitor.LiveStartEvent += ActionLiveStartEventHandler;
-			monitor.LiveEndEvent += ActionLiveEndEventHandler;
-			monitor.Start();
+            logger.Info("チャンネルの記録を開始しました。");
 
-			label1.Text = "[ 状態：記録中 ]";
+            SetSchedule();
+        }
 
-			logger.Info("チャンネルの記録を開始しました。");
+        // ライブ開始時の処理
+        private void ActionLiveEndEventHandler(object sender, LiveEventArgs e)
+        {
+            // Do something
+        }
 
-			SetSchedule();
-		}
+        // ライブ開始時の処理
+        private void ActionLiveStartEventHandler(object sender, LiveEventArgs e)
+        {
+            Channel channel = e.Channel;
 
-		private void ActionLiveEndEventHandler(object sender, LiveEventArgs e) {
-			// Do something
-		}
+            // ポップアップ
+            if (option.Notice.PopUp.Enable)
+            {
+                Invoke((MethodInvoker)delegate
+                {
+                    PopupForm notificationForm = new PopupForm(channel);
+                    notificationForm.Show();
+                });
+            }
 
-		private void ActionLiveStartEventHandler(object sender, LiveEventArgs e) {
-			Channel channel = e.Channel;
+            // ブラウザ起動
+            if (option.Notice.Web.Enable)
+            {
+                Process.Start(channel.Live.Url);
+            }
 
-			if (option.Notice.PopUp.Enable) {
-				Invoke((MethodInvoker) delegate{
-					PopupForm notificationForm = new PopupForm(channel);
-					notificationForm.Show();
-				});
-			}
+            // 通知音
+            if (option.Notice.Sound.Enable)
+            {
+                option.Notice.Sound.Play();
+            }
 
-			if (option.Notice.Web.Enable) {
-				Process.Start(channel.Live.Url);
-			}
+            // 外部アプリ
+            if (option.Notice.App.Enable)
+            {
+                // 登録した外部アプリの数だけ処理を行う
+                foreach (var item in option.Notice.App.AppItems)
+                {
+                    if (!item.Enable) continue;
+                    if (string.IsNullOrWhiteSpace(item.FilePath)) continue;
 
-			if (option.Notice.Sound.Enable) {
-				option.Notice.Sound.Play();
-			}
+                    var matches = Regex.Matches(item.Argument, "((?:[^\\s　\"\\\\]|\\\\.|\"(?:\\\\.|[^\\\\\"])*(?:\"|$))+)");
+                    var matches2 = matches.Cast<Match>().Select(x => x.Value);
 
-			if (option.Notice.App.Enable) {
-				foreach(var item in option.Notice.App.AppItems) {
-					if (!item.Enable) continue;
-					if (string.IsNullOrWhiteSpace(item.FilePath)) continue;
+                    var args = string.Join(" ", matches2.Select(arg =>
+                    {
+                        arg = arg.Replace("{channel_id}", $"{channel.ID}");
+                        arg = arg.Replace("{channel_name}", $"{channel.Name}");
+                        arg = arg.Replace("{live_id}", $"{channel.Live.ID}");
+                        arg = arg.Replace("{live_title}", $"{channel.Live.Title}");
+                        arg = arg.Replace("{live_url}", $"{channel.Live.Url}");
+                        arg = arg.Replace("{live_start_time}", $"{channel.Live.StartTime}");
+                        arg = arg.Trim('\"');
 
-					var arg = item.Argument;
-					arg = arg.Replace("{channel_id}", $"{channel.ID}");
-					arg = arg.Replace("{channel_name}", $"{channel.Name}");
-					arg = arg.Replace("{live_id}", $"{channel.Live.ID}");
-					arg = arg.Replace("{live_title}", $"{channel.Live.Title}");
-					arg = arg.Replace("{live_url}", $"{channel.Live.Url}");
-					arg = arg.Replace("{live_start_time}", $"{channel.Live.StartTime}");
+                        //arg = arg.Contains(" ") ? "\"" + arg + "\"" : arg;
+                        return "\"" + arg + "\"";
+                    }));
 
-					Process.Start(item.FilePath, arg);
-				}
-			}
-		}
+                    Process.Start(item.FilePath, args);
+                }
+            }
+        }
 
-		private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-			DirectoryUtils.SafeCreateDirectory(@".\data");
-			liveTubeDataSet.WriteXml(@".\data\data.xml");
-			if (this.WindowState != FormWindowState.Normal) {
-				// 通常のウィンドウ状態でフォームの位置とサイズを保存する
-				Settings.Default.form_size = this.RestoreBounds.Size;
-				Settings.Default.form_location = this.RestoreBounds.Location;
-			}
-			else {
-				// 現在のフォームのサイズを保存する
-				Settings.Default.form_size = this.Size;
-			}
-			Settings.Default.Save();
-		}
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DirectoryUtils.SafeCreateDirectory(@".\data");
+            liveTubeDataSet.WriteXml(@".\data\data.xml");
+            if (this.WindowState != FormWindowState.Normal)
+            {
+                // 通常のウィンドウ状態でフォームの位置とサイズを保存する
+                Settings.Default.form_size = this.RestoreBounds.Size;
+                Settings.Default.form_location = this.RestoreBounds.Location;
+            }
+            else
+            {
+                // 現在のフォームのサイズを保存する
+                Settings.Default.form_size = this.Size;
+            }
+            Settings.Default.Save();
+        }
 
-		public void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
-			DataGridView dgv = (DataGridView)sender;
-			//"Link"列ならば、ボタンがクリックされた
-			if (dgv.Columns[e.ColumnIndex].Name == "dgvLiveURL") {
-				//訪問済みにする
-				DataGridViewLinkCell cell = (DataGridViewLinkCell)dgv[e.ColumnIndex, e.RowIndex];
-				cell.LinkVisited = true;
+        public void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+            //"Link"列ならば、ボタンがクリックされた
+            if (dgv.Columns[e.ColumnIndex].Name == "dgvLiveURL")
+            {
+                //訪問済みにする
+                DataGridViewLinkCell cell = (DataGridViewLinkCell)dgv[e.ColumnIndex, e.RowIndex];
+                cell.LinkVisited = true;
 
-				Process.Start(cell.Value.ToString());
-			}
-		}
+                Process.Start(cell.Value.ToString());
+            }
+        }
 
-		private void AddChannelButton_Click(object sender, EventArgs e) {
-			string input = AddChannelTextBox.Text;
-			if (string.IsNullOrWhiteSpace(input)) {
-				return;
-			}
+        private void AddChannelButton_Click(object sender, EventArgs e)
+        {
+            string input = AddChannelTextBox.Text;
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return;
+            }
 
-			string channelID = ExtractChannelID(input);
-			if (string.IsNullOrWhiteSpace(channelID) || HasChannelID(channelID)) {
-				logger.Error("入力したURLが正しくないか、一覧に存在しているため追加できません。");
+            string channelID = ExtractChannelID(input);
+            if (string.IsNullOrWhiteSpace(channelID) || HasChannelID(channelID))
+            {
+                logger.Error("入力したURLが正しくないか、一覧に存在しているため追加できません。");
 
-				AddChannelTextBox.Focus();
-				AddChannelTextBox.SelectAll();
-				return;
-			}
+                AddChannelTextBox.Focus();
+                AddChannelTextBox.SelectAll();
+                return;
+            }
 
-			if (tbChannel.Rows.Count >= option.General.ChannelMaxCount) {
-				logger.Error("記録可能なチャンネル数が上限に達しているため追加できません。");
-				AddChannelTextBox.Text = "";
-				return;
-			}
+            if (tbChannel.Rows.Count >= option.General.ChannelMaxCount)
+            {
+                logger.Error("記録可能なチャンネル数が上限に達しているため追加できません。");
+                AddChannelTextBox.Text = "";
+                return;
+            }
 
-			var row = GetChannelDataRow(channelID);
-			tbChannel.Rows.Add(row);
-			logger.Info("チャンネル名 " + (string)row[Consts.Channel.Name] + " を追加しました。");
+            var row = GetChannelDataRow(channelID);
+            tbChannel.Rows.Add(row);
+            logger.Info("チャンネル名 " + (string)row[Consts.Channel.Name] + " を追加しました。");
 
-			AddChannelTextBox.Clear();
-		}
+            AddChannelTextBox.Clear();
+        }
 
-		private void toolStripMenuItemDelete_Click(object sender, EventArgs e) {
-			if (dataGridView.SelectedRows.Count == 1) {
-				for (int i = 0; i < tbChannel.Rows.Count; i++) {
-					var a = tbChannel.Rows[i][Consts.Channel.ID];
-					var b = dataGridView.SelectedRows[0].Cells["dgvChannelID"].Value;
-					if (tbChannel.Rows[i][Consts.Channel.ID].Equals(dataGridView.SelectedRows[0].Cells["dgvChannelID"].Value)) {
-						string name = tbChannel.Rows[i][Consts.Channel.Name].ToString();
+        private void toolStripMenuItemDelete_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 1)
+            {
+                for (int i = 0; i < tbChannel.Rows.Count; i++)
+                {
+                    var a = tbChannel.Rows[i][Consts.Channel.ID];
+                    var b = dataGridView.SelectedRows[0].Cells["dgvChannelID"].Value;
+                    if (tbChannel.Rows[i][Consts.Channel.ID].Equals(dataGridView.SelectedRows[0].Cells["dgvChannelID"].Value))
+                    {
+                        string name = tbChannel.Rows[i][Consts.Channel.Name].ToString();
 
-						tbChannel.Rows[i].Delete();
-						logger.Info("チャンネル： " + name + " を削除しました");
-					}
-				}
-			}
-		}
+                        tbChannel.Rows[i].Delete();
+                        logger.Info("チャンネル： " + name + " を削除しました");
+                    }
+                }
+            }
+        }
 
-		private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e) {
-			if (dataGridView.SelectedRows.Count < 1) {
-				toolStripMenuItemDelete.Enabled = false;
-			}
-			else {
-				toolStripMenuItemDelete.Enabled = true;
-			}
-		}
+        private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count < 1)
+            {
+                toolStripMenuItemDelete.Enabled = false;
+            }
+            else
+            {
+                toolStripMenuItemDelete.Enabled = true;
+            }
+        }
 
-		private void textBoxChannelID_KeyPress(object sender, KeyPressEventArgs e) {
-			if (e.KeyChar == (char)Keys.Enter) {
-				e.Handled = true;
-				AddChannelButton_Click(sender, e);
-			}
-		}
+        private void textBoxChannelID_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                AddChannelButton_Click(sender, e);
+            }
+        }
 
-		private void StartChannelChakkingButton_Click(object sender, EventArgs e) {
-			monitor.Start();
-			label1.Text = "[ 状態：記録中 ]";
-		}
+        private void StartChannelChakkingButton_Click(object sender, EventArgs e)
+        {
+            monitor.Start();
+            label1.Text = "[ 状態：記録中 ]";
+        }
 
-		private void StopChannelChakkingButton_Click(object sender, EventArgs e) {
-			monitor.Stop();
-			label1.Text = "[ 状態：停止中 ]";
-		}
+        private void StopChannelChakkingButton_Click(object sender, EventArgs e)
+        {
+            monitor.Stop();
+            label1.Text = "[ 状態：停止中 ]";
+        }
 
-		private async void CheckChannelNowButton_Click(object sender, EventArgs e) {
-			CheckChannelNowButton.Enabled = false;
-			await Task.Run(() => monitor.CheckLiveStatus());
-			CheckChannelNowButton.Enabled = true;
-		}
+        private async void CheckChannelNowButton_Click(object sender, EventArgs e)
+        {
+            CheckChannelNowButton.Enabled = false;
+            await Task.Run(() => monitor.CheckLiveStatus());
+            CheckChannelNowButton.Enabled = true;
+        }
 
-		private void TextBox_Log_TextChanged(object sender, EventArgs e) {
-			if (LogTextBox.Lines.Length > 1000) {
-				LogTextBox.Text = "";
-			}
-		}
+        private void TextBox_Log_TextChanged(object sender, EventArgs e)
+        {
+            if (LogTextBox.Lines.Length > 1000)
+            {
+                LogTextBox.Text = "";
+            }
+        }
 
-		private void dataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e) {
-			if (e.ColumnIndex >= 0 && e.RowIndex >= 0) {
-				dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
-			}
-			else {
-				dataGridView.CurrentCell = null;
-			}
-		}
+        private void dataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
+            {
+                dataGridView.CurrentCell = dataGridView[e.ColumnIndex, e.RowIndex];
+            }
+            else
+            {
+                dataGridView.CurrentCell = null;
+            }
+        }
 
-		private void toolStripItemOption_Click(object sender, EventArgs e) {
-			OptionForm option = new OptionForm();
-			option.ShowDialog(this);
-		}
+        private void toolStripItemOption_Click(object sender, EventArgs e)
+        {
+            OptionForm option = new OptionForm();
+            option.ShowDialog(this);
+        }
 
-		public void ShowBalloonNotification() {
-			notifyIcon.BalloonTipTitle = "おしらせ";
-			notifyIcon.BalloonTipText = "おしらせのメッセージ";
-			notifyIcon.ShowBalloonTip(option.Notice.Balloon.ShowSec);
-		}
+        public void ShowBalloonNotification()
+        {
+            notifyIcon.BalloonTipTitle = "おしらせ";
+            notifyIcon.BalloonTipText = "おしらせのメッセージ";
+            notifyIcon.ShowBalloonTip(option.Notice.Balloon.ShowSec);
+        }
 
-		private bool HasChannelID(string channelID) {
-			var rows = tbChannel.Select(Consts.Channel.ID + "=" + "'" + channelID + "'");
+        private bool HasChannelID(string channelID)
+        {
+            var rows = tbChannel.Select(Consts.Channel.ID + "=" + "'" + channelID + "'");
 
-			if (rows.Length > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
+            if (rows.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		private string ExtractChannelID(string inputURL) {
-			string expression = "(?<type>channel)/(?<id>.*?)(&|$|/)";
+        private string ExtractChannelID(string inputURL)
+        {
+            string expression = "(?<type>channel)/(?<id>.*?)(&|$|/)";
 
-			Regex reg = new Regex(expression);
-			Match match = reg.Match(inputURL);
-			bool rtn = match.Success;
-			if (rtn == true) {
-				return match.Groups["id"].Value;
-			}
-			else {
-				return "";
-			}
-		}
+            Regex reg = new Regex(expression);
+            Match match = reg.Match(inputURL);
+            bool rtn = match.Success;
+            if (rtn == true)
+            {
+                return match.Groups["id"].Value;
+            }
+            else
+            {
+                return "";
+            }
+        }
 
-		private DataRow GetChannelDataRow(string channelID) {
-			return ToDataRow(new YouTubeDataProvider(option.General.ApiKey).GetChannelData(channelID));
-		}
+        private DataRow GetChannelDataRow(string channelID)
+        {
+            return ToDataRow(new YouTubeDataProvider(option.General.ApiKey).GetChannelData(channelID));
+        }
 
-		private DataRow ToDataRow(Channel channel) {
-			DataRow row = tbChannel.NewRow();
+        private DataRow ToDataRow(Channel channel)
+        {
+            DataRow row = tbChannel.NewRow();
 
-			row[Consts.Channel.ID] = channel.ID;
-			row[Consts.Channel.Name] = channel.Name;
-			row[Consts.Channel.Description] = channel.Description;
-			row[Consts.Channel.AddDate] = DateTime.Now;
-			row[Consts.Channel.Thumbnail.Url] = channel.Thumbnail.Url;
-			row[Consts.Channel.Thumbnail.Path] = channel.Thumbnail.Path;
-			row[Consts.Channel.Thumbnail.Image] = channel.Thumbnail.Image;
+            row[Consts.Channel.ID] = channel.ID;
+            row[Consts.Channel.Name] = channel.Name;
+            row[Consts.Channel.Description] = channel.Description;
+            row[Consts.Channel.AddDate] = DateTime.Now;
+            row[Consts.Channel.Thumbnail.Url] = channel.Thumbnail.Url;
+            row[Consts.Channel.Thumbnail.Path] = channel.Thumbnail.Path;
+            row[Consts.Channel.Thumbnail.Image] = channel.Thumbnail.Image;
 
-			return row;
-		}
+            return row;
+        }
 
-		private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
-			if (e.ColumnIndex == dgvStatus.Index) {
-				if ((bool)e.Value) {
-					e.Value = "配信中";
-				}
-				else {
-					e.Value = "未配信";
-				}
-			}
-		}
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == dgvStatus.Index)
+            {
+                if ((bool)e.Value)
+                {
+                    e.Value = "配信中";
+                }
+                else
+                {
+                    e.Value = "未配信";
+                }
+            }
+        }
 
-		private void CloseToolStripMenuItem_Click(object sender, EventArgs e) {
-			this.Close();
-		}
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
-		private void OpenChannelSelectFormToolStripMenuItem_Click(object sender, EventArgs e) {
-			var confirm = new ConfirmDialog();
+        private void OpenChannelSelectFormToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var confirm = new ConfirmDialog();
 
-			if (confirm.ShowDialog() != DialogResult.OK) {
-				return;
-			}
+            if (confirm.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
 
-			var form = new ChannelSelectForm() {
-				AddedRows = tbChannel.AsEnumerable().Select(row => (string)row[Consts.Channel.ID]).ToList<string>()
-			};
-			
-			if (form.ShowDialog() == DialogResult.OK) {
-				if (form.Rows.Length <= 0) {
-					return;
-				}
+            var form = new ChannelSelectForm()
+            {
+                AddedRows = tbChannel.AsEnumerable().Select(row => (string)row[Consts.Channel.ID]).ToList<string>()
+            };
 
-				// TODO 重複チャンネル処理
-				var tmp = form.Rows.CopyToDataTable();
-				tmp.Columns.Add(Consts.Channel.AddDate);
-				foreach (DataRow row in tmp.Rows) {
-					var now = DateTime.Now;
-					row[Consts.Channel.AddDate] = now;
-					tbChannel.ImportRow(row);
-				}
-			}
-		}
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                if (form.Rows.Length <= 0)
+                {
+                    return;
+                }
 
-		private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e) {
-			Process.Start(@".\");
-		}
+                // TODO 重複チャンネル処理
+                var tmp = form.Rows.CopyToDataTable();
+                tmp.Columns.Add(Consts.Channel.AddDate);
+                foreach (DataRow row in tmp.Rows)
+                {
+                    var now = DateTime.Now;
+                    row[Consts.Channel.AddDate] = now;
+                    tbChannel.ImportRow(row);
+                }
+            }
+        }
 
-		private void OpenVersionInfoToolStripMenuItem_Click(object sender, EventArgs e) {
-			new VersionInfo().ShowDialog();
-		}
+        private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(@".\");
+        }
 
-		private void OpenYoutubeTopToolStripMenuItem_Click(object sender, EventArgs e) {
-			Process.Start("https://www.youtube.com");
-		}
+        private void OpenVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new VersionInfo().ShowDialog();
+        }
 
-		private void OpenYouTubeLiveTopToolStripMenuItem_Click(object sender, EventArgs e) {
-			Process.Start("https://www.youtube.com/channel/UC4R8DWoMoI7CAwX8_LjQHig");
-		}
+        private void OpenYoutubeTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.youtube.com");
+        }
 
-		private void SetSchedule() {
-			var table = new DataTable();
-			table.Columns.Add("liveStartTime");
-			table.Columns.Add("user");
-			table.Columns.Add("liveTitle");
-			Schedule.ReadOnUserLocal().ForEach((dic) => {
-				table.Rows.Add(dic["liveStartTime"], dic["user"], dic["liveTitle"]);
-			});
+        private void OpenYouTubeLiveTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.youtube.com/channel/UC4R8DWoMoI7CAwX8_LjQHig");
+        }
 
-			ScheduleDGV.DataSource = table;
-		}
-	}
+        private void SetSchedule()
+        {
+            var table = new DataTable();
+            table.Columns.Add("liveStartTime");
+            table.Columns.Add("user");
+            table.Columns.Add("liveTitle");
+            Schedule.ReadOnUserLocal().ForEach((dic) =>
+            {
+                table.Rows.Add(dic["liveStartTime"], dic["user"], dic["liveTitle"]);
+            });
+
+            ScheduleDGV.DataSource = table;
+        }
+    }
 }
